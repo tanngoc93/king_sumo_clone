@@ -1,0 +1,71 @@
+<% content_for :title do %>
+  Resend Confirmation Instructions
+<% end %>
+<div class="card">
+  <div class="card-body mx-auto">
+    <h4 class="card-title mt-3 text-center">Resend confirmation instructions</h4>
+    <p class="text-center"></p>
+    <p class="divider-text">
+      <span class="bg-light"> <!-- OR --> </span>
+    </p>
+    <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="mb-3">
+        <%= f.label :email, class: "form-label" %><br />
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), class: "form-control" %>
+      </div>
+
+      <div class="mb-3 actions">
+        <%= f.submit "Resend confirmation instructions", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+
+    <div class="mb-3 actions">
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</div> <!-- card.// -->
+<style type="text/css">
+@media (min-width: 450px) {
+  .card .card-body {
+    width: 482px !important;
+  }
+}
+.card {
+  height: 100vh;
+  border: none;
+}
+.field_with_errors{
+  width: 100%;
+}
+.divider-text {
+  position: relative;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.divider-text span {
+  padding: 7px;
+  font-size: 12px;
+  position: relative;   
+  z-index: 2;
+}
+.divider-text:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  top: 55%;
+  left: 0;
+  z-index: 1;
+}
+.btn-facebook {
+  background-color: #405D9D;
+  color: #fff;
+}
+.btn-twitter {
+  background-color: #42AEEC;
+  color: #fff;
+}
+</style>

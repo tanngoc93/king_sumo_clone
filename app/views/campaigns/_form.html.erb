@@ -1,0 +1,323 @@
+<%= form_with(model: campaign, multipart: true) do |form| %>
+  <% if campaign.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(campaign.errors.count, "error") %> prohibited this campaign from being saved:</h2>
+      <ul>
+        <% campaign.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p class="divider-text">
+    <span class="bg-light"> Giveaway Information </span>
+  </p>
+
+  <div class="mb-3">
+    <%= form.label :title, class: "form-label", style: "font-weight: bold;" %>
+    <%= form.text_field :title, required: true, placeholder: "ENTER TO WIN A MICROSOFT SURFACE 2017", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :description, class: "form-label", style: "font-weight: bold;" %>
+    <%= form.text_area :description, id: "editor", class: "form-control" %>
+  </div>
+  <div class="row mb-3">
+    <div class="col">
+      <%= form.label :starts_at, class: "form-label", style: "font-weight: bold;" %>
+      <%= form.datetime_field :starts_at, required: true, value: Time.now.strftime("%Y-%m-%dT%H:%M"), class: "form-control" %>
+    </div>
+    <div class="col">
+      <%= form.label :ends_at, class: "form-label", style: "font-weight: bold;" %>
+      <%= form.datetime_field :ends_at, required: true, value: (Time.now + 7.days).strftime("%Y-%m-%dT%H:%M"), class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col">
+      <%= form.label :awarded_at, class: "form-label", style: "font-weight: bold;" %>
+      <%= form.datetime_field :awarded_at, required: true, value: (Time.now + 8.days).strftime("%Y-%m-%dT%H:%M"), class: "form-control" %>
+    </div>
+    <div class="col">
+      <%= form.label :timezone, class: "form-label", style: "font-weight: bold;" %>
+      <%= form.select :timezone, options_for_select(@timezones.map { |t| [t['value'], t['abbr']] }.sort, @campaign.timezone), {}, { class: "form-control", disabled: false } %>
+    </div>
+  </div>
+
+  <br />
+
+  <p class="divider-text">
+    <span class="bg-light"> Who's Running This Giveaway? </span>
+  </p>
+
+  <div class="row mb-3">
+    <div class="col">
+      <label class="form-label" for="campaign_offered_by_name">Business name</label>
+      <%= form.text_field :offered_by_name, required: true, placeholder: "Microsoft Corporation", class: "form-control" %>
+    </div>
+    <div class="col">
+      <%= form.label "Website", class: "form-label", style: "font-weight: bold;" %>
+      <%= form.url_field :offered_by_url, required: true, placeholder: "https://microsoft.com", class: "form-control" %>
+    </div>
+  </div>
+
+  <br />
+
+  <p class="divider-text">
+    <span class="bg-light"> What Are You Giving Away? </span>
+  </p>
+
+  <div class="mb-3">
+    <%= form.label :winner_prize_name, class: "form-label", style: "font-weight: bold;" %>
+    <label class="form-label" for="campaign_winner_prize_name">Prie</label>
+    <%= form.text_field :winner_prize_name, required: true, placeholder: "Microsoft Surface Pro 2021", class: "form-control" %>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col">
+      <%= form.label :number_of_winners, class: "form-label", style: "font-weight: bold;" %>
+      <%= form.number_field :number_of_winners, required: true, class: "form-control" %>
+    </div>
+    <div class="col">
+      <%= form.label :winner_prize_value, class: "form-label", style: "font-weight: bold;" %>
+      <div class="input-group mb-3">
+        <span class="input-group-text">$</span>
+        <%= form.number_field :winner_prize_value, required: true, value: number_to_currency(form.object.winner_prize_value, delimiter: '', unit: ''), step: ".01", class: "form-control" %>
+      </div>
+    </div>
+  </div>
+
+  <p class="row">
+    <span class="bg-light text-center"> Prize Images </span>
+  </p>
+
+  <div class="row" style="position: relative;">
+    <% if @campaign.prize_images.size > 0 %>
+      <% @campaign.prize_images.each_with_index do |image, index| %>
+        <div class="col imgUp imgStorageId-<%= image.id %>" style="position: relative; padding-left: calc(var(--bs-gutter-x) * .5); padding-right: calc(var(--bs-gutter-x) * .5);">
+          <div class="imagePreview" style="background-image: url('<%= url_for(image) %>');"></div>
+          <i onclick="myFunction('<%= image.id %>', '<%= image_path(image) %>')" class="fas fa-ban text-danger del-on-server"></i>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="col imgUp" style="position: relative; padding-left: calc(var(--bs-gutter-x) * .5); padding-right: calc(var(--bs-gutter-x) * .5);">
+        <div class="imagePreview"></div>
+        <label class="btn btn-success">Upload
+          <input type="file" name="campaign[prize_images][]" class="uploadFile" style="width: 0px; height: 0px; overflow: hidden;" />
+        </label>
+        <i class="fas fa-ban text-danger del"></i>
+      </div>
+    <% end %>
+
+    <i class="fa fa-plus imgAdd" style="position: absolute; top: -45px; right: 0;"></i>
+  </div><!-- row -->
+
+  <script type="text/javascript">
+    $(".imgAdd").click(function () {
+      $(this).closest(".row").find('.imgAdd').before('<div class="col imgUp" style="position: relative;"><div class="imagePreview"></div><label class="btn btn-success">Upload<input type="file" name="campaign[prize_images][]" class="uploadFile img" style="width:0px;height:0px;overflow:hidden;"></label><i class="fas fa-ban text-danger del"></i></div>');
+    });
+    $(document).on("click", "i.del", function () {
+      $(this).parent().remove();
+    });
+    $(function () {
+      $(document).on("change", ".uploadFile", function () {
+        var uploadFile = $(this);
+        var files = !!this.files ? this.files : [];
+        if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+
+        if (/^image/.test(files[0].type)) { // only image file
+          var reader = new FileReader(); // instance of the FileReader
+          reader.readAsDataURL(files[0]); // read the local file
+
+          reader.onloadend = function () { // set image data as background of div
+            uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+          }
+        }
+
+      });
+    });
+  </script>
+
+  <br />
+
+  <p class="divider-text">
+    <span class="bg-light"> 4. Sharing </span>
+  </p>
+
+  <div class="mb-3">
+    <p>Click to select the platforms you want your contestants to use to share your giveaway:</p>
+
+    <%= form.fields_for :share_actions do |action| %>
+      <%= render "share_action_fields", :f => action %>
+    <% end %>
+  </div>
+
+  <br />
+
+  <p class="divider-text">
+    <span class="bg-light"> 5. Bonus Entries </span>
+  </p>
+
+  <div class="mb-3">
+    <p>These are actions a contestant can take to get even more entries:</p>
+  </div>
+
+  <%= form.fields_for :bonus_entries do |bonus| %>
+    <%= render "bonus_entry_fields", :f => bonus %>
+  <% end %>
+
+  <div class="d-grid">
+    <%= link_to_add_association 'add more bonus entry', form, :bonus_entries, class: "btn btn-success" %>
+  </div>
+
+  <br />
+
+  <p class="divider-text">
+    <span class="bg-light"> 6. EU GDPR consent checkbox </span>
+  </p>
+
+  <div class="mb-3">
+    <p>Are you planning to send your entrants marketing messages after the giveaway? Are any of your contestants located in the EU? If yes, or you’re not sure, enable the checkbox option below so your contestants can give clear consent as required by EU GDPR:</p>
+
+    <%= form.check_box :gdpr, class: "form-check-input" %>
+    <%= form.label "Require GDPR Consent", class: "form-label", style: "font-weight: bold;", for: "campaign_gdpr" %>
+  </div>
+
+  <p class="divider-text">
+    <span class="bg-light">Done</span>
+  </p>
+
+  <div class="actions text-center">
+    <%= link_to "Cancel", :back, data: { confirm: 'Go back without saving?' }, class: "btn btn-secondary" %>&nbsp;
+    <%= form.submit "Save", class: "btn btn-success" %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  function myFunction(id, url) {
+    $.ajax({
+      method: "DELETE",
+      url: url
+    })
+      .done(function( msg ) {
+        $(`.imgStorageId-${id}`).remove();
+      });
+  }
+</script>
+
+<script>
+  ClassicEditor.create( document.querySelector( "#editor" ), {
+    language: {
+      language: "en"
+    },
+    toolbar: [ "heading", "|", "bold", "italic", "link", "bulletedList", "numberedList", "blockQuote", "undo", "redo" ]
+  })
+  .then( editor => {
+      window.editor = editor;
+  } )
+  .catch( error => {
+    console.error( error );
+  });
+</script>
+
+<style>
+.ck-editor__editable_inline {
+  min-height: 400px;
+}
+</style>
+<style type="text/css">
+.imagePreview {
+  width: 100%;
+  height: 150px;
+  background: url(//cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg);
+  background-color: #ebebeb;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: inline-block;
+  box-shadow: 0px -3px 6px 2px rgba(0, 0, 0, 0.2);
+}
+
+label.btn.btn-success,
+label.btn.btn-warning {
+  width: 130px;
+  border-radius: 0px;
+  box-shadow: 0px 4px 6px 2px rgba(0, 0, 0, 0.2);
+  margin-top: -50px;
+}
+
+.imgUp {
+  margin-bottom: 15px;
+}
+
+.del, .del-on-server {
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  background-color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+}
+
+.imgAdd {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #4bd7ef;
+  color: #fff;
+  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  line-height: 30px;
+  margin: auto;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 0;
+}
+
+</style><style type="text/css">.field_with_errors {
+  width: 100%;
+}
+
+.ck-editor__editable_inline {
+  min-height: 200px;
+}
+
+.divider-text {
+  position: relative;
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.divider-text span {
+  font-weight: bold;
+  padding: 7px;
+  font-size: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.divider-text:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  top: 55%;
+  left: 0;
+  z-index: 1;
+}
+
+.btn-facebook {
+  background-color: #405D9D;
+  color: #fff;
+}
+
+.btn-twitter {
+  background-color: #42AEEC;
+  color: #fff;
+}
+</style>

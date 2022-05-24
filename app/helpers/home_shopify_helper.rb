@@ -1,0 +1,2 @@
+module HomeShopifyHelper
+end

@@ -1,0 +1,22 @@
+<% content_for :title do %>
+  Create New Campaign
+<% end %>
+<div class="container">
+  <div class="card" style="box-shadow: 0 10px 35px 0 rgb(99 123 173 / 20%); margin: 25px 0; padding-bottom: 50px; border-radius: 20px;">
+    <div class="card-body mx-auto">
+      <h4 class="card-title mt-4 text-center">Create A Campaign</h4>
+      <%= render 'form', campaign: @campaign %>
+    </div>
+  </div> <!-- card.// -->
+</div>
+<style type="text/css">
+@media (min-width: 450px) {
+  .card .card-body {
+    width: 55% !important;
+  }
+}
+.card {
+  min-height: 100vh;
+  border: none;
+}
+</style>

@@ -1,0 +1,74 @@
+<% content_for :title do %>
+  Campaign Dashboard
+<% end %>
+<div class="container">
+  <table class="table" style="margin-top: 25px;">
+    <thead>
+      <tr>
+        <th scope="col" class="text-left">Title</th>
+        <th scope="col" class="text-center">Contestants</th>
+        <th scope="col" class="text-center">Entries</th>
+        <th scope="col" class="text-center">Status</th>
+        <th scope="col" class="text-center">Export CSV</th>
+        <th scope="col" class="text-center">Promo</th>
+        <th scope="col" class="text-center">View</th>
+        <th scope="col" class="text-center">#</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @campaigns.each do |campaign| %>
+        <tr>
+          <td class="text-left">
+            <%= campaign.title %>&nbsp;
+            <%= link_to edit_campaign_path(campaign) do %>
+              <span style="color: #198754;"><i class="far fa-edit"></i></span>
+            <% end %>
+          </td>
+          <td class="text-center">
+            <%= campaign.contestants.size %>&nbsp;
+            <%= link_to campaign_contestants_path(campaign) do %>
+              <span style="color: #198754;"><i class="fas fa-eye"></i></span>
+            <% end %>
+          </td>
+          <td class="text-center"><%= campaign.total_entries %></td>
+          <td class="text-center">
+            <% if campaign.status == "running" %>
+              <button disabled class="btn btn-success btn-sm"><%= campaign.status %></button>
+            <% elsif campaign.status == "stopped" %>
+              <button disabled class="btn btn-dark btn-sm"><%= campaign.status %></button>
+            <% else %>
+              <button disabled class="btn btn-dark btn-sm"><%= campaign.status %></button>
+            <% end %>
+          </td>
+          <td class="text-center">
+            <%= link_to campaign_path(campaign, format: :csv) do %>
+              <span style="color: #198754;"><i class="fas fa-download"></i></span>
+            <% end %>
+          </td>
+          <td class="text-center">
+            <%= link_to campaign_path(campaign) do %>
+              <span style="color: #198754;"><i class="fas fa-code"></i></span>
+            <% end %>
+          </td>
+          <td class="text-center">
+            <%= link_to contestant_register_path(campaign), target: "_blank" do %>
+              <span style="color: #198754;"><i class="fas fa-desktop"></i></span>
+            <% end %>
+          </td>
+          <td class="text-center">
+            <%= link_to campaign, method: :delete, data: { confirm: 'Are you sure?' } do %>
+              <span style="color: red;"><i class="fas fa-trash-alt"></i></span>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <%= paginate @campaigns %>
+    </ul>
+  </nav>
+  <br>
+  <%= link_to 'New Campaign', new_campaign_path, class: "btn btn-success", style: "background-color: #198754; border-color: #198754;" %>
+</div>

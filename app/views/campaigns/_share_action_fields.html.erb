@@ -1,0 +1,5 @@
+<div class="form-check form-check-inline">
+  <%= f.hidden_field :name %>
+  <%= f.check_box :checked, id: f.object.name, class: "form-check-input" %>
+  <%= f.label f.object.name, for: f.object.name, class: "form-check-label" %>
+</div>

@@ -1,0 +1,404 @@
+<% content_for :title do %>
+  <%= @campaign.title %> - <%= @campaign.offered_by_name %>
+<% end %>
+
+<% content_for :facebook_properties do %>
+  <meta property="og:url"           content="<%= root_url.chomp("/") + contestant_register_path(@campaign) %>" />
+  <meta property="og:type"          content="website" />
+  <meta property="og:title"         content="<%= @campaign.title %>" />
+  <meta property="og:description"   content="<%= @campaign.description %>" />
+  <meta property="og:image"         content="<%= @campaign.prize_images.size > 0 ? url_for(@campaign.prize_images.first) : nil %>" />
+<% end %>
+
+<div class="page-width page-width--narrow card mx-auto" style="max-width: 72.5rem; margin: 25px 0; box-shadow: 0 10px 25px 0 rgb(99 123 173 / 20%); border-radius: 20px;">
+  <% if @campaign.prize_images.size > 0 %>
+    <div id="carouselGiveaway" class="carousel slide" data-bs-ride="carousel" style="height: 350px">
+      <div class="carousel-inner">
+        <% @campaign.prize_images.each_with_index do |image, index| %>
+          <div class="carousel-item <%= index === 0 ? "active" : nil %>">
+            <div class="d-block w-100" style="z-index: 99; height: 300px; border-radius: 20px 20px 0 0; background-image: url(<%= url_for(image) %>); background-repeat: no-repeat; background-position: top center; background-size: cover;"></div>
+          </div>
+        <% end %>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselGiveaway" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselGiveaway" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  <% end %>
+  <div class="card-body" style="box-shadow: 0 10px 35px 0 rgb(99 123 173 / 20%); margin: <%= @campaign.prize_images.size > 0 ? "-65px 0 0 0" : "0" %>; padding: 35px 44px; border-radius: 20px; background-color: #FFF; z-index: 9999;">
+    <% unless @campaign.campaign_time_out? %>
+      <h1 class="card-title mb-4 text-center"><%= @campaign.title %></h1>
+      <div class="hr-title h6">
+        <div>TIME LEFT</div>
+      </div>
+      <div class="d-flex text-center align-items-center basic-info">
+        <div class="col-6 col-sm-2 col-md-3 h6 order-2 order-sm-1 basic-b">VALUE: $<%= "%.2f" % @campaign.winner_prize_value.round(2) %></div>
+        <div class="col-12 col-sm-7 col-md-6 order-1 order-sm-2 hr-b-small">
+          <div class="time-left d-flex justify-content-center" id="countdown">
+            <div class="time-unity">
+              <span id="countdown-days" style="font-weight: bold;">*</span><br><span class="label">DAYS</span>
+            </div>
+            <div>:</div>
+            <div class="time-unity">
+              <span id="countdown-hours" style="font-weight: bold;">*</span><br><span class="label">HOURS</span>
+            </div>
+            <div>:</div>
+            <div class="time-unity">
+              <span id="countdown-minutes" style="font-weight: bold;">*</span><br><span class="label">MIN</span>
+            </div>
+            <div>:</div>
+            <div class="time-unity">
+              <span id="countdown-seconds" style="font-weight: bold;">*</span><br><span class="label">SEC</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-2 col-md-3 h6 order-3 basic-b">WINNERS: <%= @campaign.number_of_winners %></div>
+      </div>
+    <% end %>  
+    <% if @campaign.campaign_time_out? %>
+      <h1 class="card-title mb-4 text-center" style="margin-top: 1.2rem;">Oops, The Giveaway Has Ended</h1>
+    <% else %>
+      <div class="hr-arrow-down"></div>
+      <div class="mb-3" style="margin-top: 1rem;">
+        <p class="text-center"><b>Enter with your email address or facebook:</b></p>
+      </div>
+      <div class="register-form mx-auto" style="max-width: 440px; margin: 1rem 0;">
+        <%= form_with(model: @contestant, url: contestant_register_path(@campaign), id: "contestant-register-form", class: "needs-validation", local: false) do |form| %>
+          <div class="">
+            <div class="input-group has-validation">
+              <%= form.text_field :email, class: "form-control", placeholder: "Enter your email", required: true %>
+              <%= form.submit "ENTER", id: "contestant-btn", class: "btn btn-success", disabled: true %>
+              <div class="invalid-feedback">
+                Your have entered an invalid e-mail address!
+              </div>
+            </div>
+          </div>
+          <p class="text-muted mt-3" style="text-align: center;">
+            <label class="form-check-label">
+            <input class="form-check-input mr-2" type="checkbox"required=""> <small>I consent to getting sale, promotion, or marketing email*</small>
+            </label> 
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+    <div class="hr-top mt-5"></div>
+    <div class="pt-4 pb-5"><%= @campaign.description.html_safe %></div>
+    <p class="divider-text">
+      <span class="bg-light"> OFFERED BY: </span>
+    </p>
+    <div class="row mb-3" style="padding-top: 15px;">
+      <div class="d-flex flex-wrap justify-content-center">
+        <div class="mx-3"><small title="America/New_York"><span class="h6">Giveaway Timezone: <%= @campaign.timezone || "UTC" %></span></small></div>
+        <div class="mx-3"><small><span class="h6">Offered By: </span> <%= link_to @campaign.offered_by_name.upcase, @campaign.offered_by_url, target: "blank" %></small></div>
+      </div>
+    </div>
+    <p class="divider-text-footer">
+      <span class="bg-light">Enter sweepstakes and receive exclusive offers from <%= @campaign.offered_by_name %>. Unsubscribe anytime.<br /><a href="#">Read official rules.</a></span>
+    </p>
+  </div>
+</div>
+<!-- card.// -->
+
+<style type="text/css">
+@media (min-width: 960px) {
+  .card {
+    max-width: 50% !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .card-body {
+    padding-right: 25px !important;
+    padding-left: 25px !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .hr-arrow-down {
+    height: 7px;
+  }
+}
+
+.d-flex {
+  display: -webkit-box!important;
+  display: -ms-flexbox!important;
+  display: flex!important;
+}
+
+.hr-top {
+  margin-top: 31px;
+  position: relative;
+}
+
+.hr-plain, .hr-top {
+  background-image: url(//kingsumo.b-cdn.net/img/giv/hr.svg);
+  background-repeat: repeat-x;
+  background-size: auto 2px;
+  background-position-y: 0;
+  width: 100%;
+  height: 2px;
+  display: block;
+}
+
+.mt-5, .my-5 {
+  margin-top: 3rem!important;
+}
+
+.pb-5, .py-5 {
+  padding-bottom: 2rem!important;
+}
+
+.pt-4, .py-4 {
+  padding-top: 2rem!important;
+}
+
+.order-1 {
+  order: 1 !important;
+}
+
+.order-2 {
+  -webkit-box-ordinal-group: 3;
+  -ms-flex-order: 2;
+  order: 2;
+}
+
+.hr-arrow-down {
+  background-image: url(//kingsumo.b-cdn.net/img/giv/hr.svg);
+  background-repeat: repeat-x;
+  background-size: auto 2px;
+  background-position-y: 0;
+  width: 100%;
+  height: 23px;
+  display: block;
+  position: relative;
+}
+
+.basic-info {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.align-items-center {
+  -webkit-box-align: center!important;
+  -ms-flex-align: center!important;
+  align-items: center!important;
+}
+
+.basic-b:first-of-type {
+  border-right: 2px solid #e9eff4;
+}
+
+@media (max-width: 575px) {
+  .basic-b {
+    padding: .4rem 0;
+  }
+  .hr-b-small {
+    border-bottom: 2px solid #e9eff4;
+    margin-bottom: .6rem;
+  }
+  .col-6 {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+p {
+  font-size: 1rem;
+}
+
+.register-form {
+  width: 100%;
+}
+
+.card {
+  border: none;
+}
+
+.card .card-body {
+  width: 100%;
+}
+
+.field_with_errors {
+  width: 100%;
+}
+
+.ck-editor__editable_inline {
+  min-height: 200px;
+}
+
+.divider-text {
+  position: relative;
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.divider-text span {
+  padding: 7px;
+  font-size: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.divider-text:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  top: 55%;
+  left: 0;
+  z-index: 1;
+}
+
+.divider-text-footer {
+  position: relative;
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 25px;
+}
+
+.divider-text-footer span {
+  width: 100%;
+  display: block;
+  padding: 7px;
+  font-size: 12px;
+  position: relative;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  z-index: 2;
+}
+
+.btn-facebook {
+  background-color: #405D9D;
+  color: #fff;
+}
+
+.btn-twitter {
+  background-color: #42AEEC;
+  color: #fff;
+}
+
+.time-left {
+  line-height: 2.2rem;
+  font-size: 2.2rem;
+  font-weight: 300;
+  text-align: center;
+  padding: 18px 0 13px;
+}
+.time-unity {
+  font-family: Roboto Mono,Roboto,sans-serif;
+  margin: auto 7px;
+}
+.time-unity span.label {
+  font-family: Roboto,sans-serif;
+  font-size: .8rem;
+  font-weight: 500;
+  opacity: .5;
+}
+
+.hr-title,
+.hr-title div {
+  text-align: center;
+  background-color: #fff;
+}
+
+.hr-title {
+  background-image: url(//kingsumo.b-cdn.net/img/giv/hr.svg);
+  background-repeat: repeat-x;
+  background-size: auto 2px;
+  background-position-y: 7px;
+  width: auto;
+  margin: 0 auto;
+}
+
+.h6,
+h6 {
+  letter-spacing: .04rem;
+  font-weight: 500;
+}
+
+.hr-title,
+.hr-title div {
+  text-align: center;
+  background-color: #fff;
+}
+
+.hr-title div {
+  display: inline-block;
+  padding: 0 10px;
+}
+</style>
+
+<script src="https://gemkhin.com/javascripts/iframeResizer.contentWindow.min.js"></script>
+
+<script type="text/javascript">
+  // Set the date we're counting down to
+  var countDownDate = new Date("<%= @campaign.ends_at %>").getTime();
+  
+  // Update the count down every 1 second
+  var x = setInterval(function() {
+  
+    // Get today's date and time
+    var now = new Date().getTime();
+  
+    // Find the distance between now and the count down date
+    var distance = countDownDate - now;
+  
+    // Time calculations for days, hours, minutes and seconds
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  
+    document.getElementById("countdown-days").innerHTML = days
+    document.getElementById("countdown-hours").innerHTML = hours
+    document.getElementById("countdown-minutes").innerHTML = minutes
+    document.getElementById("countdown-seconds").innerHTML = seconds
+  
+    // Display the result in the element with id="demo"
+    // document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+    // + minutes + "m " + seconds + "s ";
+  
+    // If the count down is finished, write some text
+    if (distance < 0) {
+      clearInterval(x);
+      document.getElementById("demo").innerHTML = "EXPIRED";
+    }
+  }, 1000);
+</script>
+
+<script type="text/javascript">
+  $( document ).ready(function() {
+
+    const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    $("input#contestant_email").on('propertychange input', function (e) {
+      var valueChanged = false;
+
+      if (e.type=='propertychange') {
+          valueChanged = e.originalEvent.propertyName == 'value';
+      } else {
+          valueChanged = true;
+      }
+
+      if (valueChanged && regex.test($("input#contestant_email").val())) {
+        $("input#contestant-btn").attr("disabled", false);
+        $("input#contestant_email").removeClass("is-invalid");
+        $("form#contestant-register-form").addClass("was-validated");
+      } else {
+        $("input#contestant-btn").attr("disabled", true);
+        $("input#contestant_email").addClass("is-invalid");
+      }
+    });
+
+  });
+</script>

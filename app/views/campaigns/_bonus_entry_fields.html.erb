@@ -1,0 +1,23 @@
+<div class='nested-fields mb-3'>
+  <div class="row">
+    <div class="col mb-3">
+      <label class="form-label">Select an Action</label>
+      <%= f.select :name, BonusEntry.names.keys.map { |w| [w.titleize, w] }, { include_blank: "Select entry" }, { class: "form-control", required: true } %>
+    </div>
+    <div class="col mb-3">
+      <label class="form-label">Points</label>
+      <%= f.number_field :action_points, required: true, value: 2, class: "form-control", placeholder: "Points" %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col mb-3">
+      <label class="form-label">Action Text</label>
+      <%= f.text_field :action_text, required: true, class: "form-control", placeholder: "Like me on Facebook" %>
+    </div>
+    <div class="col mb-3">
+      <label class="form-label">Action URL</label>
+      <%= f.url_field :action_url, required: true, class: "form-control", placeholder: "https://facebook.com/microsoft" %>
+    </div>
+  </div>
+  <%= link_to_remove_association "Remove", f %>
+</div>

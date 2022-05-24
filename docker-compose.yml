@@ -1,0 +1,98 @@
+version: "3.8"
+
+networks:
+  bridge-network:
+    driver: bridge
+
+volumes:
+  db:
+  node_modules_cache:
+  bundle_cache:
+
+services:
+  redis:
+    image: redis:6.2.5
+    command: redis-server
+    networks:
+      - bridge-network
+
+  db:
+    image: postgres:14.0
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - bridge-network
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+    networks:
+      - bridge-network
+
+  web:
+    tty: true
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: ./.dockerdev/Dockerfile
+      args:
+        RUBY_VERSION: "2.7.6"
+        ARG_RAILS_MASTER_KEY: "75befa9e36f167157458c6f0bc22c560"
+    working_dir: /home/app/html
+    environment:
+      REDIS_URL: "redis://redis:6379"
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_DEVELOPMENT: data_development
+      DATABASE_TEST: data_test
+      REDIS_HOST: redis://redis:6379/0
+      BUNDLE_PATH: /bundle/vendor
+      RAILS_ENV: development
+      PORT: 3000
+    command: /bin/sh ".dockerdev/commander/commander.dev.sh"
+    volumes:
+      - .:/home/app/html:rw
+      - bundle_cache:/bundle
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - bridge-network
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: ./.dockerdev/Dockerfile
+      args:
+        RUBY_VERSION: "2.7.6"
+        ARG_RAILS_MASTER_KEY: "75befa9e36f167157458c6f0bc22c560"
+    working_dir: /home/app/html
+    environment:
+      REDIS_URL: "redis://redis:6379"
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_DEVELOPMENT: data_development
+      DATABASE_TEST: data_test
+      REDIS_HOST: redis://redis:6379/0
+      BUNDLE_PATH: /bundle/vendor
+      RAILS_ENV: development
+      PORT: 3000
+    command: /bin/sh -c "bundle check || bundle install && bundle exec sidekiq -C config/sidekiq.yml"
+    volumes:
+      - .:/home/app/html
+      - bundle_cache:/bundle
+    depends_on:
+      - db
+    networks:
+      - bridge-network

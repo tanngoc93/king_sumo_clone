@@ -1,0 +1,101 @@
+<% content_for :title do %>
+  Edit <%= resource_name.to_s.humanize %>
+<% end %>
+<div class="card">
+  <div class="card-body mx-auto">
+    <h4 class="card-title mt-3 text-center">Edit <%= resource_name.to_s.humanize %></h4>
+    <p class="text-center"></p>
+    <p class="divider-text">
+      <span class="bg-light"> <!-- OR --> </span>
+    </p>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="mb-3">
+        <%= f.label :email, class: "form-label" %><br />
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control", disabled: true %>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <div><span class="text-warning">Currently waiting confirmation for: <%= resource.unconfirmed_email %></span></div>
+        <% end %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :password, class: "form-label" %> <i>(leave blank if you don't want to change it)</i><br />
+        <%= f.password_field :password, autocomplete: "new-password", class: "form-control", disabled: current_user.user_type.eql?("shopify") ? true : false, placeholder: current_user.user_type.eql?("shopify") ? "Shopify users can't change their password" : "Enter your password"  %>
+        <% if @minimum_password_length %>
+          <em><%= @minimum_password_length %> characters minimum</em>
+        <% end %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :password_confirmation, class: "form-label" %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control", disabled: current_user.user_type.eql?("shopify") ? true : false, placeholder: current_user.user_type.eql?("shopify") ? "Shopify users can't change their password" : "Enter your password" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :current_password, class: "form-label" %> <i>(we need your current password to confirm your changes)</i><br />
+        <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control", disabled: current_user.user_type.eql?("shopify") ? true : false, placeholder: current_user.user_type.eql?("shopify") ? "Shopify users can't change their password" : "Enter your password" %>
+      </div>
+
+      <% unless current_user.user_type.eql?("shopify") %>
+        <div class="mb-3 actions">
+          <%= f.submit "Update", class: "btn btn-warning" %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <% unless current_user.user_type.eql?("shopify") %>
+      <div class="mb-3 actions">
+        <%= button_to "Unhappy? Cancel My Account!", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-sm btn-danger" %>
+      </div>
+    <% end %>
+    
+    <div class="mb-3 actions">
+      <%= link_to "Back", :back %>
+    </div>
+  </div>
+</div> <!-- card.// -->
+<style type="text/css">
+@media (min-width: 450px) {
+  .card .card-body {
+    width: 482px !important;
+  }
+}
+.card {
+  height: 100vh;
+  border: none;
+}
+.field_with_errors{
+  width: 100%;
+}
+.divider-text {
+  position: relative;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.divider-text span {
+  padding: 7px;
+  font-size: 12px;
+  position: relative;   
+  z-index: 2;
+}
+.divider-text:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  top: 55%;
+  left: 0;
+  z-index: 1;
+}
+.btn-facebook {
+  background-color: #405D9D;
+  color: #fff;
+}
+.btn-twitter {
+  background-color: #42AEEC;
+  color: #fff;
+}
+</style>

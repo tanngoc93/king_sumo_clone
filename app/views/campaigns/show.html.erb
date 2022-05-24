@@ -1,0 +1,497 @@
+<% content_for :title do %>
+  <%= @campaign.title %> - <%= @campaign.offered_by_name %>
+<% end %>
+
+<% content_for :facebook_properties do %>
+  <meta property="og:url"           content="<%= root_url.chomp("/") + contestant_register_path(@campaign) %>" />
+  <meta property="og:type"          content="website" />
+  <meta property="og:title"         content="<%= @campaign.title %>" />
+  <meta property="og:description"   content="<%= @campaign.description %>" />
+  <meta property="og:image"         content="<%= @campaign.prize_images.size > 0 ? @campaign.prize_images.first : nil %>" />
+<% end %>
+
+<div class="page-width page-width--narrow card mx-auto" style="max-width: 72.5rem; margin: 30px 0; box-shadow: 0 10px 50px 0 rgb(99 123 173 / 20%); border-radius: 20px;">
+  <div class="card-body" style="box-shadow: 0 10px 35px 0 rgb(99 123 173 / 20%); padding: 35px 44px; border-radius: 20px; background-color: #FFF; z-index: 9999;">
+    <div class="giv-entry-title pt-2 pt-sm-3 pb-0 pb-sm-2 mb-2">
+      <div class="mb-4">
+        <h1><strong>Congratulations!</strong></h1>
+        <p class="mb-4">Can you believe this??? Your giveaway is aliiiiive!<br />Now here comes the best part: promoting it!</p>
+      </div>
+      <div class="arrow-down-ribbon animate my-3"></div>
+      <div class="d-block text-center mb-5">
+        <!-- START OF VIRAL ACTIONS -->
+        <div id="entry-actions mb-3">
+          <div class="d-flex justify-content-center">
+            <div class="w-100 px-0 px-sm-4">
+              <div class="promo-act-list ">
+              <%= link_to "Copy Link", contestant_register_path(@campaign), class: "promo-act-btn promo-link", target: "_blank" %>
+              <a class="promo-act-btn promo-twitter" href="https://twitter.com/share?url=<%= root_url.chomp("/") + contestant_register_path(@campaign) %>&amp;via=GemkhinGiveaway&amp;hashtags=giveaway,win&amp;text=<%= @campaign.title %>" target="_blank">Tweet about it</a>
+              <a class="promo-act-btn promo-facebook" href="https://www.facebook.com/sharer/sharer.php?u=<%= root_url.chomp("/") + contestant_register_path(@campaign) %>&amp;title=<%= @campaign.title %>&amp;description=<%= @campaign.description %>" target="_blank">Share on Facebook</a>
+              <button class="promo-act-btn promo-embed">Embed the giveaway widget on your website</button>
+              <div>
+                <textarea class="border-0 rounded bg-light p-3 w-100 text-dark" rows="9" id="copy-promo-embed-code" readonly><div id="gemkhin-embed" data-url="<%= root_url.chomp("/") + contestant_register_path(@campaign) %>"></div> <script type="text/javascript" src="https://gemkhin.com/javascripts/embed.js"></script></textarea>
+                <style type="text/css">
+                  textarea#copy-promo-embed-code {
+                    overflow: hidden;
+                    border-radius: 20px;
+                    margin: 20px 0;
+                  }
+                </style>
+              </div>
+            </div>
+          </div>
+        </div>
+        <style type="text/css">
+          .promo-act-btn:first-child {
+            border-top: 2px solid #e9eff4;
+          }
+        </style>
+        <!-- END OF VIRAL ACTIONS -->
+        <div class="row" style="margin-top: 35px;">
+          <div class="row justify-content-center">        
+            <div class="col-12 col-lg-8 my-4">
+              <div class="text-center">
+                <p class="mb-2"><%= link_to "Go to your Giveaway page", contestant_register_path(@campaign), target: "_blank" %></p>
+                <p class="mb-2"><%= link_to "Edit this giveaway", edit_campaign_path(@campaign), target: "_blank" %></p>
+                <p class="mb-2"><%= link_to "Manage all giveaways", campaigns_path %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- card.// -->
+
+<style>
+.giv-entry-title {
+  text-align: center;
+}
+
+.alert {
+  font-size: .95rem;
+}
+
+.promo-act-list {
+  display: block;
+  max-width: 100%;
+}
+
+.promo-act-line,
+.tag-entries {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.promo-act-line {
+  -webkit-box-pack: left;
+  -ms-flex-pack: left;
+  justify-content: left;
+}
+
+.promo-act-btn {
+  background: none !important;
+}
+
+.promo-act-btn,
+.promo-act-btn:hover {
+  -webkit-transition: background-color .2s ease-in-out, color .2s ease-in-out;
+  transition: background-color .2s ease-in-out, color .2s ease-in-out;
+}
+
+.promo-act-list div:first-child .promo-act-line>.promo-act-btn {
+  border-top: 2px solid #e9eff4;
+}
+
+.promo-act-line>.promo-act-btn {
+  border-bottom: 2px solid #e9eff4;
+}
+
+.promo-act-btn,
+.promo-act-btn:hover {
+  -webkit-transition: background-color .2s ease-in-out, color .2s ease-in-out;
+  transition: background-color .2s ease-in-out, color .2s ease-in-out;
+}
+
+.promo-act-btn {
+  position: relative;
+  width: 100%;
+  display: block;
+  border: 0;
+  border-bottom: 2px solid #e9eff4;
+  padding: .7rem 50px .7rem 44px;
+  text-align: left;
+  color: #525a68;
+  line-height: 1.4rem;
+  -webkit-transition: background-color .2s ease-in-out,color .2s ease-in-out;
+  transition: background-color .2s ease-in-out,color .2s ease-in-out;
+}
+
+.promo-check:before {
+  background-color: #3ec242;
+  border: 2px solid #3ec242;
+  background-image: url(//kingsumo.b-cdn.net/img/icon-check.svg);
+  background-size: 65%;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  color: #3ebdd4;
+}
+
+.tag-entries div {
+  font-weight: 500;
+  font-size: .7rem;
+  line-height: .7rem;
+  margin-left: .3rem;
+}
+
+.tag-entries {
+  text-align: left;
+  margin-left: 9px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background-color: #aeb8c4;
+  padding: 4px 5px 4px 8px;
+  color: #fff;
+  width: auto;
+  border-bottom-right-radius: 3px;
+  border-top-right-radius: 3px;
+  background-image: url(https://kingsumo.b-cdn.net/img/giv/tag-entries-left2.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: left -1px top 0;
+  -webkit-transition: margin-left .2s ease-in-out, background-color .2s ease-in-out, padding-left .2s ease-in-out;
+  transition: margin-left .2s ease-in-out, background-color .2s ease-in-out, padding-left .2s ease-in-out;
+}
+</style>
+
+<style type="text/css">
+@media (min-width: 960px) {
+  .card {
+    max-width: 50% !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .card-body {
+    padding-right: 25px !important;
+    padding-left: 25px !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .hr-arrow-down {
+    height: 7px;
+  }
+}
+
+.arrow-down-ribbon.animate {
+  -webkit-animation: arrow-down-ribbon .7s ease-in-out infinite;
+  animation: arrow-down-ribbon .7s ease-in-out infinite;
+}
+
+.arrow-down-ribbon {
+  display: block;
+  height: 55px;
+  width: 54px;
+  background-repeat: no-repeat;
+  background-image: url(//kingsumo.b-cdn.net/img/arrow-down-ribbon.svg);
+  background-size: 54px;
+  margin-right: auto;
+  margin-left: auto;
+  background-position: 50%;
+}
+
+.promo-facebook:after,
+.promo-messenger:after {
+  font-family: Font Awesome\ 5 Brands;
+  font-size: 1.6rem;
+}
+
+.promo-act-btn:after {
+  left: 0;
+  width: 35px;
+  text-align: center;
+  top: .7rem;
+  position: absolute;
+}
+
+.promo-facebook:after {
+  content: "\F39E";
+  color: #3b5998;
+}
+
+.promo-messenger:after {
+  content: "\F39F";
+  color: #2b85ff;
+}
+
+.promo-twitter:after {
+  font-family: Font Awesome\ 5 Brands;
+  content: "\F099";
+  color: #00aced;
+  font-size: 1.6rem;
+}
+
+.promo-email:after {
+  font-family: Font Awesome\ 5 Free;
+  content: "\F0E0";
+  color: #6e7687;
+  font-weight: 900;
+  font-size: 1.5rem;
+}
+
+.promo-badge:after {
+  background-image: url(//kingsumo.b-cdn.net/img/icon-badge.svg);
+  background-size: 79%;
+  height: 23px;
+}
+
+.promo-badge:after,
+.promo-sumo:after {
+  content: "";
+  background-repeat: no-repeat;
+  background-position: 50%;
+  width: 34px;
+  right: 0;
+}
+
+.promo-embed:after {
+  content: "\F121";
+}
+
+.promo-link:after {
+  content: "\F0C1";
+}
+
+.promo-embed:after,
+.promo-link:after {
+  font-family: Font Awesome\ 5 Free;
+  color: #6e7687;
+  font-weight: 900;
+  font-size: 1.5rem;
+}
+
+.d-flex {
+  display: -webkit-box!important;
+  display: -ms-flexbox!important;
+  display: flex!important;
+}
+
+.hr-top {
+  margin-top: 31px;
+  position: relative;
+}
+
+.hr-plain,
+.hr-top {
+  background-image: url(//kingsumo.b-cdn.net/img/giv/hr.svg);
+  background-repeat: repeat-x;
+  background-size: auto 2px;
+  background-position-y: 0;
+  width: 100%;
+  height: 2px;
+  display: block;
+}
+
+.mt-5,
+.my-5 {
+  margin-top: 3rem!important;
+}
+
+.pb-5,
+.py-5 {
+  padding-bottom: 2rem!important;
+}
+
+.pt-4,
+.py-4 {
+  padding-top: 2rem!important;
+}
+
+.order-1 {
+  order: 1 !important;
+}
+
+.order-2 {
+  -webkit-box-ordinal-group: 3;
+  -ms-flex-order: 2;
+  order: 2;
+}
+
+.hr-arrow-down {
+  background-image: url(//kingsumo.b-cdn.net/img/giv/hr.svg);
+  background-repeat: repeat-x;
+  background-size: auto 2px;
+  background-position-y: 0;
+  width: 100%;
+  height: 23px;
+  display: block;
+  position: relative;
+}
+
+.basic-info {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.align-items-center {
+  -webkit-box-align: center!important;
+  -ms-flex-align: center!important;
+  align-items: center!important;
+}
+
+.basic-b:first-of-type {
+  border-right: 2px solid #e9eff4;
+}
+
+@media (max-width: 575px) {
+  .basic-b {
+    padding: .4rem 0;
+  }
+  .hr-b-small {
+    border-bottom: 2px solid #e9eff4;
+    margin-bottom: .6rem;
+  }
+  .col-6 {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+p {
+  font-size: 1rem;
+}
+
+.register-form {
+  width: 100%;
+}
+
+.card {
+  border: none;
+}
+
+.card .card-body {
+  width: 100%;
+}
+
+.field_with_errors {
+  width: 100%;
+}
+
+.ck-editor__editable_inline {
+  min-height: 200px;
+}
+
+.divider-text {
+  position: relative;
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.divider-text span {
+  padding: 7px;
+  font-size: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.divider-text:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  top: 55%;
+  left: 0;
+  z-index: 1;
+}
+
+.divider-text-footer {
+  position: relative;
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 25px;
+}
+
+.divider-text-footer span {
+  width: 100%;
+  display: block;
+  padding: 7px;
+  font-size: 12px;
+  position: relative;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  z-index: 2;
+}
+
+.btn-facebook {
+  background-color: #405D9D;
+  color: #fff;
+}
+
+.btn-twitter {
+  background-color: #42AEEC;
+  color: #fff;
+}
+
+.time-left {
+  line-height: 2.2rem;
+  font-size: 2.2rem;
+  font-weight: 300;
+  text-align: center;
+  padding: 18px 0 13px;
+}
+
+.time-unity {
+  font-family: Roboto Mono, Roboto, sans-serif;
+  margin: auto 7px;
+}
+
+.time-unity span.label {
+  font-family: Roboto, sans-serif;
+  font-size: .8rem;
+  font-weight: 500;
+  opacity: .5;
+}
+
+.hr-title,
+.hr-title div {
+  text-align: center;
+  background-color: #fff;
+}
+
+.hr-title {
+  background-image: url(//kingsumo.b-cdn.net/img/giv/hr.svg);
+  background-repeat: repeat-x;
+  background-size: auto 2px;
+  background-position-y: 7px;
+  width: auto;
+  margin: 0 auto;
+}
+
+.h6 {
+  letter-spacing: .04rem;
+  font-weight: 500;
+}
+
+.hr-title,
+.hr-title div {
+  text-align: center;
+  background-color: #fff;
+}
+
+.hr-title div {
+  display: inline-block;
+  padding: 0 10px;
+}
+</style>
+

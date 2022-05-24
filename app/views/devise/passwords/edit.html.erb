@@ -1,0 +1,81 @@
+<% content_for :title do %>
+  Change Your Password
+<% end %>
+<div class="card">
+  <div class="card-body mx-auto">
+    <h4 class="card-title mt-3 text-center">Change your password</h4>
+    <p class="text-center"></p>
+    <p class="divider-text">
+      <span class="bg-light"> <!-- OR --> </span>
+    </p>
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+      <%= f.hidden_field :reset_password_token %>
+
+      <div class="mb-3">
+        <%= f.label :password, "New password", class: "form-label" %><br />
+        <% if @minimum_password_length %>
+          <em>(<%= @minimum_password_length %> characters minimum)</em><br />
+        <% end %>
+        <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :password_confirmation, "Confirm new password", class: "form-label" %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
+      </div>
+
+      <div class="mb-3 actions">
+        <%= f.submit "Change my password", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+
+    <div class="mb-3 actions">
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</div> <!-- card.// -->
+<style type="text/css">
+@media (min-width: 450px) {
+  .card .card-body {
+    width: 482px !important;
+  }
+}
+.card {
+  height: 100vh;
+  border: none;
+}
+.field_with_errors{
+  width: 100%;
+}
+.divider-text {
+  position: relative;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.divider-text span {
+  padding: 7px;
+  font-size: 12px;
+  position: relative;   
+  z-index: 2;
+}
+.divider-text:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  top: 55%;
+  left: 0;
+  z-index: 1;
+}
+.btn-facebook {
+  background-color: #405D9D;
+  color: #fff;
+}
+.btn-twitter {
+  background-color: #42AEEC;
+  color: #fff;
+}
+</style>
+

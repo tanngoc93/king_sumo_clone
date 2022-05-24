@@ -1,0 +1,210 @@
+<%= form_with(model: campaign) do |form| %>
+  <% if campaign.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(campaign.errors.count, "error") %> prohibited this campaign from being saved:</h2>
+
+      <ul>
+        <% campaign.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p class="divider-text">
+    <span class="bg-light"> 1. Giveaway Information </span>
+  </p>
+
+  <div class="mb-3">
+    <%= form.label :title, class: "form-label" %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, id: "editor", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :starts_at, class: "form-label" %>
+    <%= form.datetime_field :starts_at, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :ends_at, class: "form-label" %>
+    <%= form.datetime_field :ends_at, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :awarded_at, class: "form-label" %>
+    <%= form.datetime_field :awarded_at, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :timezone, class: "form-label" %>
+    <%= form.select :timezone, ["Zone 1", "Zone 2", "Zone 3"], {}, { class: "form-control" } %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :offered_by_name, class: "form-label" %>
+    <%= form.text_field :offered_by_name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :offered_by_url, class: "form-label" %>
+    <%= form.text_field :offered_by_url, class: "form-control" %>
+  </div>
+
+  <p class="divider-text">
+    <span class="bg-light"> 2. Setup Winner Prize </span>
+  </p>
+
+  <div class="mb-3">
+    <%= form.label :number_of_winners, class: "form-label" %>
+    <%= form.number_field :number_of_winners, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :winner_prize_name, class: "form-label" %>
+    <%= form.text_field :winner_prize_name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :winner_prize_value, class: "form-label" %>
+    <%= form.number_field :winner_prize_value, class: "form-control" %>
+  </div>
+
+  <p class="divider-text">
+    <span class="bg-light"> 3. Setup Runner-up Prize(Optional) </span>
+  </p>
+
+  <div class="mb-3">
+    <%= form.label :number_of_runners_up, class: "form-label" %>
+    <%= form.number_field :number_of_runners_up, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :runner_up_prize_name, class: "form-label" %>
+    <%= form.text_field :runner_up_prize_name, class: "form-control" %>
+  </div>  
+
+  <div class="mb-3">
+    <%= form.label :runner_up_prize_value, class: "form-label" %>
+    <%= form.number_field :runner_up_prize_value, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :prize_images, class: "form-label" %>
+    <%= form.file_field :prize_images, class: "form-control", multiple: true, direct_upload: false %>
+  </div>
+
+  <p class="divider-text">
+    <span class="bg-light"> 4. Sharing </span>
+  </p>
+
+  <p class="divider-text">
+    <span class="bg-light"> 5. Bonus Entries </span>
+  </p>
+
+  <div class="mb-3">
+    <p>These are actions a contestant can take to get even more entries:</p>
+  </div>
+
+  <%= form.fields_for :bonus_entries do |bonus| %>
+
+    <div class="mb-3">
+      <%= bonus.label :type, class: "form-label" %>
+      <%= bonus.text_field :type, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= bonus.label :action_text, class: "form-label" %>
+      <%= bonus.text_field :action_text, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= bonus.label :action_url, class: "form-label" %>
+      <%= bonus.text_field :action_url, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= bonus.label :points, class: "form-label" %>
+      <%= bonus.number_field :points, value: 2, class: "form-control" %>
+    </div>
+  <% end %>
+
+  <p class="divider-text">
+    <span class="bg-light"> 6. EU GDPR consent checkbox </span>
+  </p>
+
+  <div class="mb-3">
+    <p>Are you planning to send your entrants marketing messages after the giveaway? Are any of your contestants located in the EU? If yes, or you’re not sure, enable the checkbox option below so your contestants can give clear consent as required by EU GDPR.:</p>
+
+    <input class="form-check-input" type="checkbox" name="campaign[gdpr]" id="gdpr">
+    <label class="form-check-label" for="gdpr">Require GDPR Consent</label>
+  </div>
+
+  <div class="actions" style="margin: 50px 0;">
+    <%= form.submit "Create A Campaign", class: "btn btn-success" %>
+  </div>
+<% end %>
+
+<script>
+  ClassicEditor.create( document.querySelector( "#editor" ), {
+    toolbar: [ "heading", "|", "bold", "italic", "link", "bulletedList", "numberedList", "blockQuote" ],
+    heading: {
+      options: [
+        { model: "paragraph", title: "Paragraph", class: "ck-heading_paragraph" },
+        { model: "heading1", view: "h1", title: "Heading 1", class: "ck-heading_heading1" },
+        { model: "heading2", view: "h2", title: "Heading 2", class: "ck-heading_heading2" }
+      ]
+    }
+  })
+  .catch( error => {
+    console.error( error );
+  });
+</script>
+
+
+<style>
+.ck-editor__editable_inline {
+    min-height: 400px;
+}
+</style>
+<style type="text/css">
+.field_with_errors{
+  width: 100%;
+}
+.ck-editor__editable_inline {
+  min-height: 200px;
+}
+.divider-text {
+  position: relative;
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.divider-text span {
+  padding: 7px;
+  font-size: 12px;
+  position: relative;   
+  z-index: 2;
+}
+.divider-text:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  top: 55%;
+  left: 0;
+  z-index: 1;
+}
+.btn-facebook {
+  background-color: #405D9D;
+  color: #fff;
+}
+.btn-twitter {
+  background-color: #42AEEC;
+  color: #fff;
+}
+</style>
