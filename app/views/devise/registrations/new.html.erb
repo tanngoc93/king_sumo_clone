@@ -41,6 +41,30 @@
     <% end %>
   </div>
 </div> <!-- card.// -->
+
+<script type="text/javascript">
+
+  // Guard against double DOM loads
+  var codeExecuted = false;
+
+  document.addEventListener('DOMContentLoaded', function(e) {
+
+    // Check if importmap stuff exisits without throwing an error.
+    // Then run main code w/ guard against multiple executions.
+    if ("importmapScriptsLoaded" in window) { 
+
+      if (!codeExecuted) {
+        // Main code here
+        console.log($('#hello'));
+
+        // Don't forget to bump guard for one-time only JS execution !!
+        codeExecuted = true; 
+      };  
+    };
+
+  });
+</script>
+
 <style type="text/css">
 @media (min-width: 450px) {
   .card .card-body {

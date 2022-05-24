@@ -32,9 +32,6 @@ gem "bootsnap", require: false
 gem "sassc-rails"
 
 #
-gem "jquery-rails"
-
-#
 gem "bootstrap", "~> 5.1.3"
 
 #
