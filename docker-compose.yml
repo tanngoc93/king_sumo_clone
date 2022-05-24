@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 
 networks:
   bridge-network:
@@ -11,12 +11,14 @@ volumes:
 
 services:
   redis:
-    image: redis:6.2.5
+    container_name: redis
+    image: redis:7.0.0
     command: redis-server
     networks:
       - bridge-network
 
   db:
+    container_name: db
     image: postgres:14.0
     environment:
       POSTGRES_USER: postgres
@@ -29,6 +31,7 @@ services:
       - bridge-network
 
   adminer:
+    container_name: adminer
     image: adminer
     ports:
       - 8080:8080
@@ -36,13 +39,14 @@ services:
       - bridge-network
 
   web:
+    container_name: web
     tty: true
     stdin_open: true
     build:
       context: .
       dockerfile: ./.dockerdev/Dockerfile
       args:
-        RUBY_VERSION: "2.7.6"
+        RUBY_VERSION: "3.0.3"
         ARG_RAILS_MASTER_KEY: "75befa9e36f167157458c6f0bc22c560"
     working_dir: /home/app/html
     environment:
@@ -69,11 +73,12 @@ services:
       - bridge-network
 
   sidekiq:
+    container_name: sidekiq
     build:
       context: .
       dockerfile: ./.dockerdev/Dockerfile
       args:
-        RUBY_VERSION: "2.7.6"
+        RUBY_VERSION: "3.0.3"
         ARG_RAILS_MASTER_KEY: "75befa9e36f167157458c6f0bc22c560"
     working_dir: /home/app/html
     environment:
