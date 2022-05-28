@@ -1,19 +1,15 @@
 class AddUser < SeedMigration::Migration
   def up
-    user = User.find_by(email: "tanngoc93@gmail.com")
+    user = User.find_by(email: "email@example.com")
 
-    if user.nil?
-      user = User.new(email: "tanngoc93@gmail.com", password: "tanngoc93@gmail.com", password_confirmation: "tanngoc93@gmail.com")
+    unless user
+      user = User.new(email: "email@example.com", password: "Q24ya9Z98magfGvg", password_confirmation: "Q24ya9Z98magfGvg")
       user.skip_confirmation!
       user.save!
     end
   end
 
   def down
-    user = User.find_by(email: "tanngoc93@gmail.com")
-
-    if user
-      user.destroy
-    end
+    User.find_by(email: "email@example.com").try(:destroy)
   end
 end

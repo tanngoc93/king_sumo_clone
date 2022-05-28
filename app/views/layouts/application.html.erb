@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <title><%= yield :title %></title>
@@ -11,18 +10,21 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
+
+    <script src="//cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-
   </head>
   <body data-controller="<%= controller_name %>" data-action="<%= action_name %>">
-
-    <div id="fb-root"></div>
 
     <% unless controller_name == "contestants" && ["show", "new"].include?(action_name) %>
       <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container container-fluid">
-          <%= link_to 'CatCatCat', root_url, class: "navbar-brand" %>
+          <%= link_to '#', root_url, class: "navbar-brand" %>
 
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -31,18 +33,15 @@
           <% if user_signed_in? %>
             <div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
               <div class="navbar-nav" style="margin-left: -92.61px;">
-                <%= link_to 'Home', root_url, class: "nav-link active text-uppercase" %>
-                <a href="/shopifapp" class="nav-link active text-uppercase">Shopify Integration</a>
                 <%= link_to 'Dashboard', campaigns_url, class: "nav-link active text-uppercase" %>
                 <%= link_to 'Account', edit_user_registration_path, class: "nav-link active text-uppercase" %>
-                <%= link_to 'Sign out', destroy_user_session_path, class: "nav-link active text-uppercase", method: "delete" %>
+                <%= link_to 'Sign out', destroy_user_session_path, class: "nav-link active text-uppercase", data: { turbo_method: :delete } %>
               </div>
             </div>
           <% else %>
             <div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
               <div class="navbar-nav" style="margin-left: -92.61px;">
                 <%= link_to 'Home', root_url, class: "nav-link active text-uppercase" %>
-                <a href="/shopifapp" class="nav-link active text-uppercase">Shopify Integration</a>
                 <%= link_to 'Sign up', new_user_registration_path, class: "nav-link active text-uppercase" %>
                 <%= link_to 'Sign in', new_user_session_path, class: "nav-link active text-uppercase" %>
               </div>

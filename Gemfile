@@ -28,49 +28,37 @@ gem "jbuilder"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
-# 
 gem "sassc-rails"
 
-#
 gem "bootstrap", "~> 5.1.3"
 
-#
 gem "devise"
 
-#
 gem "cocoon"
 
-#
 gem "friendly_id"
 
-#
 gem "cloudinary"
 
-#
 gem "kaminari"
 
-#
 gem "sidekiq"
 
-#
-gem "sidekiq"
-
-# 
 gem "seed_migration"
 
-#
 gem "shopify_app", "~> 18.0"
 
-# 
+gem "image_processing", ">= 1.2"
+
 gem "net-http", :group => :development
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
-  
+
   gem "letter_opener"
   gem "letter_opener_web"
-  
+
   gem "rspec-rails"
   gem "shoulda-matchers"
   gem "factory_bot_rails"

@@ -1,3 +1,10 @@
+<h2
+  style="color: #6e7687;"
+  class="card-title mt-4 text-center"
+>
+Create Giveaway Campaign
+</h2>
+
 <%= form_with(model: campaign, multipart: true) do |form| %>
   <% if campaign.errors.any? %>
     <div id="error_explanation">
@@ -11,18 +18,19 @@
   <% end %>
 
   <p class="divider-text">
-    <span class="bg-light"> Giveaway Information </span>
+    <span class="bg-light">Giveaway Information </span>
   </p>
 
   <div class="mb-3">
     <%= form.label :title, class: "form-label", style: "font-weight: bold;" %>
-    <%= form.text_field :title, required: true, placeholder: "ENTER TO WIN A MICROSOFT SURFACE 2017", class: "form-control" %>
+    <%= form.text_field :title, required: true, placeholder: "Enter To Win A Microsoft Surface 2017", class: "form-control" %>
   </div>
 
   <div class="mb-3">
     <%= form.label :description, class: "form-label", style: "font-weight: bold;" %>
     <%= form.text_area :description, id: "editor", class: "form-control" %>
   </div>
+
   <div class="row mb-3">
     <div class="col">
       <%= form.label :starts_at, class: "form-label", style: "font-weight: bold;" %>
@@ -53,7 +61,7 @@
 
   <div class="row mb-3">
     <div class="col">
-      <label class="form-label" for="campaign_offered_by_name">Business name</label>
+      <label class="form-label" for="campaign_offered_by_name" style="font-weight: bold;">Business's name</label>
       <%= form.text_field :offered_by_name, required: true, placeholder: "Microsoft Corporation", class: "form-control" %>
     </div>
     <div class="col">
@@ -65,79 +73,140 @@
   <br />
 
   <p class="divider-text">
-    <span class="bg-light"> What Are You Giving Away? </span>
+    <span class="bg-light">What Are You Giving Away? </span>
   </p>
 
   <div class="mb-3">
-    <%= form.label :winner_prize_name, class: "form-label", style: "font-weight: bold;" %>
-    <label class="form-label" for="campaign_winner_prize_name">Prie</label>
+    <label class="form-label" style="font-weight: bold;" for="campaign_winner_prize_name">Prize name</label>
     <%= form.text_field :winner_prize_name, required: true, placeholder: "Microsoft Surface Pro 2021", class: "form-control" %>
   </div>
 
   <div class="row mb-3">
     <div class="col">
-      <%= form.label :number_of_winners, class: "form-label", style: "font-weight: bold;" %>
+      <label class="form-label" style="font-weight: bold;" for="campaign_winner_prize_value">Number of Winners</label>
       <%= form.number_field :number_of_winners, required: true, class: "form-control" %>
     </div>
     <div class="col">
-      <%= form.label :winner_prize_value, class: "form-label", style: "font-weight: bold;" %>
+      <label class="form-label" style="font-weight: bold;" for="campaign_winner_prize_value">Prize value</label>
       <div class="input-group mb-3">
         <span class="input-group-text">$</span>
-        <%= form.number_field :winner_prize_value, required: true, value: number_to_currency(form.object.winner_prize_value, delimiter: '', unit: ''), step: ".01", class: "form-control" %>
+        <%= form.number_field :winner_prize_value, required: true, value: number_to_currency(form.object.winner_prize_value, delimiter: '', unit: ''), step: ".1", class: "form-control" %>
       </div>
     </div>
   </div>
 
-  <p class="row">
-    <span class="bg-light text-center"> Prize Images </span>
-  </p>
+  <div class="row mb-3">
+    <span class="bg-light text-center">Prize Images</span>
+  </div>
 
-  <div class="row" style="position: relative;">
-    <% if @campaign.prize_images.size > 0 %>
-      <% @campaign.prize_images.each_with_index do |image, index| %>
-        <div class="col imgUp imgStorageId-<%= image.id %>" style="position: relative; padding-left: calc(var(--bs-gutter-x) * .5); padding-right: calc(var(--bs-gutter-x) * .5);">
-          <div class="imagePreview" style="background-image: url('<%= url_for(image) %>');"></div>
-          <i onclick="myFunction('<%= image.id %>', '<%= image_path(image) %>')" class="fas fa-ban text-danger del-on-server"></i>
-        </div>
-      <% end %>
-    <% else %>
-      <div class="col imgUp" style="position: relative; padding-left: calc(var(--bs-gutter-x) * .5); padding-right: calc(var(--bs-gutter-x) * .5);">
-        <div class="imagePreview"></div>
-        <label class="btn btn-success">Upload
-          <input type="file" name="campaign[prize_images][]" class="uploadFile" style="width: 0px; height: 0px; overflow: hidden;" />
-        </label>
-        <i class="fas fa-ban text-danger del"></i>
+  <div id="add-images" data-controller="image">
+    <div class="d-flex flex-wrap mb-1">
+      <div class="add-image-file image-file" style="background-image: url(https://kingsumo.com/img/add-image.svg);">
+        <input type="file" accept=".jpg,.jpeg,.png" class="image-file-input" title="Click to edit" style="cursor: pointer;" />
+        <p>Add cover image <span class="text-warning">*</span></p>
       </div>
-    <% end %>
+    </div>
+    <input type="hidden" name="image_id">
+  </div>
 
-    <i class="fa fa-plus imgAdd" style="position: absolute; top: -45px; right: 0;"></i>
-  </div><!-- row -->
+  <style type="text/css">
 
-  <script type="text/javascript">
-    $(".imgAdd").click(function () {
-      $(this).closest(".row").find('.imgAdd').before('<div class="col imgUp" style="position: relative;"><div class="imagePreview"></div><label class="btn btn-success">Upload<input type="file" name="campaign[prize_images][]" class="uploadFile img" style="width:0px;height:0px;overflow:hidden;"></label><i class="fas fa-ban text-danger del"></i></div>');
-    });
-    $(document).on("click", "i.del", function () {
-      $(this).parent().remove();
-    });
-    $(function () {
-      $(document).on("change", ".uploadFile", function () {
-        var uploadFile = $(this);
-        var files = !!this.files ? this.files : [];
-        if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+    .edit-image-file {
+    position: absolute;
+    bottom: -34px;
+    width: 106px;
+    text-align: center;
+}
 
-        if (/^image/.test(files[0].type)) { // only image file
-          var reader = new FileReader(); // instance of the FileReader
-          reader.readAsDataURL(files[0]); // read the local file
+.icon-delete {
+    background-image: url(https://kingsumo.b-cdn.net/img/icon-delete.svg);
+}
 
-          reader.onloadend = function () { // set image data as background of div
-            uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
-          }
-        }
+.icon-delete, .icon-edit {
+    height: 20px;
+    width: 23px;
+    background-position: 50%;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    bottom: -25px;
+    display: inline-block;
+    border: 0;
+    margin: 0 5px;
+    background-color: #fff;
+}
 
-      });
-    });
-  </script>
+    .add-image-file {
+    margin-right: 15px;
+    width: 106px;
+    height: 99px;
+    background-position: 50%;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-image: url(/img/add-image.svg);
+    margin-bottom: 45px;
+}
+
+.image-file {
+    width: 106px;
+    height: 99px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: cover;
+    position: relative;
+    border-radius: 0.4rem;
+    display: inline-block;
+    margin-bottom: 55px;
+    margin-right: 15px;
+}
+
+.image-file-input {
+    width: 106px;
+    height: 99px;
+    margin: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+input[type="file" i] {
+    appearance: none;
+    background-color: initial;
+    cursor: default;
+    align-items: baseline;
+    color: inherit;
+    text-overflow: ellipsis;
+    white-space: pre;
+    text-align: start !important;
+    padding: initial;
+    border: initial;
+    overflow: hidden !important;
+}
+
+.add-image-file p {
+    padding-top: 44px;
+    line-height: 1.3;
+    text-align: center;
+    color: #aeb8c4;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.text-warning {
+    color: #f58b00!important;
+}
+
+.add-image-file p {
+    padding-top: 44px;
+    line-height: 1.3;
+    text-align: center;
+    color: #aeb8c4;
+}
+  </style>
 
   <br />
 
@@ -167,8 +236,8 @@
     <%= render "bonus_entry_fields", :f => bonus %>
   <% end %>
 
-  <div class="d-grid">
-    <%= link_to_add_association 'add more bonus entry', form, :bonus_entries, class: "btn btn-success" %>
+  <div class="" style="width:  100%; text-align: center;">
+    <%= link_to_add_association 'add more bonus entry', form, :bonus_entries, class: "btn btn-dark btn-circle btn-circle-lg" %>
   </div>
 
   <br />
@@ -189,22 +258,10 @@
   </p>
 
   <div class="actions text-center">
-    <%= link_to "Cancel", :back, data: { confirm: 'Go back without saving?' }, class: "btn btn-secondary" %>&nbsp;
-    <%= form.submit "Save", class: "btn btn-success" %>
+    <%= link_to "Cancel", :back, data: { confirm: 'Go back without saving?' }, class: "btn btn-secondary", style: "border-radius: 0px;" %>&nbsp;
+    <%= form.submit "Save", class: "btn btn-success", style: "border-radius: 0px;" %>
   </div>
 <% end %>
-
-<script type="text/javascript">
-  function myFunction(id, url) {
-    $.ajax({
-      method: "DELETE",
-      url: url
-    })
-      .done(function( msg ) {
-        $(`.imgStorageId-${id}`).remove();
-      });
-  }
-</script>
 
 <script>
   ClassicEditor.create( document.querySelector( "#editor" ), {
@@ -220,6 +277,65 @@
     console.error( error );
   });
 </script>
+
+<style type="text/css">
+  /*
+*
+* ==========================================
+* CUSTOM UTIL CLASSES
+* ==========================================
+*
+*/
+
+.btn-circle {
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.btn-circle i {
+  position: relative;
+  top: -1px;
+}
+
+.btn-circle-sm {
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 0.9rem;
+}
+
+.btn-circle-lg {
+  width: 55px;
+  height: 55px;
+  line-height: 55px;
+  font-size: 1.1rem;
+}
+
+.btn-circle-xl {
+  width: 70px;
+  height: 70px;
+  line-height: 70px;
+  font-size: 1.3rem;
+}
+
+/*
+*
+* ==========================================
+* FOR DEMO PURPOSES
+* ==========================================
+*
+*/
+
+body {
+  background: #f8f8fd;
+  color: #514B64;
+  min-height: 100vh;
+}
+</style>
 
 <style>
 .ck-editor__editable_inline {
@@ -319,5 +435,28 @@ label.btn.btn-warning {
 .btn-twitter {
   background-color: #42AEEC;
   color: #fff;
+}
+</style>
+
+<style type="text/css">
+  * {
+  box-sizing:border-box;
+}
+textarea {
+  width:100%;
+  resize: vertical;
+  padding:15px;
+  border-radius:15px;
+  border:0;
+  box-shadow:4px 4px 10px rgba(0,0,0,0.06);
+  height:150px;
+}
+span.input-group-text {
+  border-radius: 0 !important;
+}
+input:not(.btn, .form-check-input, .image-file-input), select {
+  display:block;
+  width:100%;
+  border-radius: 0 !important;
 }
 </style>

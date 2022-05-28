@@ -1,10 +1,8 @@
 class ShareAction < ApplicationRecord
-  belongs_to :campaign
-
   has_many :share_action_managements
   has_many :contestant, -> { distinct }, through: :share_action_managements
 
-  before_create :set_action_points
+  belongs_to :campaign
 
   enum name: [
     :email,
@@ -14,8 +12,11 @@ class ShareAction < ApplicationRecord
     :twitter
   ]
 
+  before_create :set_action_points
+
   private
-    def set_action_points
-      self.action_points = 3
-    end
+
+  def set_action_points
+    self.action_points = 3
+  end
 end

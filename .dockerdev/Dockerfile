@@ -2,13 +2,13 @@ ARG RUBY_VERSION
 
 FROM ruby:${RUBY_VERSION}
 
-ARG ARG_RAILS_MASTER_KEY
+# ARG ARG_RAILS_MASTER_KEY
 
 ENV PORT=3000 \
     RAILS_ENV=development \
     APP_DIR=/home/app/html \
-    BUNDLE_PATH=/bundle/vendor \
-    RAILS_MASTER_KEY=${ARG_RAILS_MASTER_KEY}
+    BUNDLE_PATH=/bundle/vendor
+    # RAILS_MASTER_KEY=${ARG_RAILS_MASTER_KEY}
 
 RUN apt-get update -qq \
   && apt-get install -yq --no-install-recommends \

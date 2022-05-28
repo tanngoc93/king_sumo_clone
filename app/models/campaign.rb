@@ -3,13 +3,14 @@ require "csv"
 class Campaign < ApplicationRecord
   paginates_per 100
 
-  belongs_to :user
-
+  has_many :images, dependent: :destroy
   has_many :contestants, dependent: :destroy
   has_many :share_actions, dependent: :destroy
   has_many :bonus_entries, dependent: :destroy
 
   has_many_attached :prize_images
+
+  belongs_to :user
 
   extend FriendlyId
   friendly_id :title, use: :scoped, scope: :user
@@ -21,16 +22,8 @@ class Campaign < ApplicationRecord
 
   before_create :slug_override
 
-  enum status: [
-    :running,
-    :stoped,
-    :archived
-  ]
-
-  enum currency_unit: [
-    :usd,
-    :euro
-  ]
+  enum status: [:running, :stoped, :archived]
+  enum currency_unit: [:usd, :euro]
 
   def to_csv
     attributes = %w{id full_name email registered_ip confirmed_ip created_at confirmed total_points total_referrals}
@@ -51,26 +44,27 @@ class Campaign < ApplicationRecord
   end
 
   private
-    def share_actions_override
-      self.share_actions.each do |action|
-        key = action[0]
 
-        if key.eql?("email")
-          self.share_actions[key] = "Share via #{key}"
-        else
-          self.share_actions[key] = "Share on #{key.capitalize}"
-        end
+  def share_actions_override
+    self.share_actions.each do |action|
+      key = action[0]
+
+      if key.eql?("email")
+        self.share_actions[key] = "Share via #{key}"
+      else
+        self.share_actions[key] = "Share on #{key.capitalize}"
       end
     end
+  end
  
-    def slug_override
-      self.slug = "#{self.slug}-#{generate_token}"
-    end
+  def slug_override
+    self.slug = "#{self.slug}-#{generate_token}"
+  end
 
-    def generate_token
-      loop do
-        token = SecureRandom.hex(1)
-        break token unless self.class.exists?(slug: "#{self.slug}-#{token}")
-      end
+  def generate_token
+    loop do
+      token = SecureRandom.hex(1)
+      break token unless self.class.exists?(slug: "#{self.slug}-#{token}")
     end
+  end
 end

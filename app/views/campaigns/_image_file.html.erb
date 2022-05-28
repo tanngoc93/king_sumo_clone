@@ -1,0 +1,6 @@
+<div class="image-file image-file-<%= id %>" style="background-image: url(<%= url %>)">
+  <input type="hidden" name="prize_images[]" value="<%= id %>">
+  <div class="edit-image-file">
+    <button type="button" class="icon-delete" title="Remove image" data-action="click->image#removeImage" data-id="<%= id %>"></button>
+  </div>
+</div>

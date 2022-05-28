@@ -30,6 +30,12 @@ class CampaignsController < ApplicationController
     @campaign = Campaign.new(campaign_params.merge(user: current_user))
 
     if @campaign.save
+      image_ids = params[:prize_images]
+
+      unless image_ids.empty?
+        Image.where(id: image_iunds.map(&:to_i)).update_all(campaign_id: @campaign.id)
+      end
+
       redirect_to campaigns_path, notice: "Campaign was successfully created."
     else
       render :new, status: :unprocessable_entity

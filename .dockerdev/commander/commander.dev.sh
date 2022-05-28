@@ -14,6 +14,6 @@ if [ -f $APP_DIR/tmp/pids/server.pid ]; then
   rm -f $APP_DIR/tmp/pids/server.pid
 fi
 
-bundle exec rails db:create db:migrate && bundle exec erd && bundle exec puma -C config/puma.rb
+bundle exec rails db:create db:migrate && bundle exec puma -C config/puma.rb
 
 exec "$@"

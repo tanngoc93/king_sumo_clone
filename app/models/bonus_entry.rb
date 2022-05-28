@@ -1,8 +1,8 @@
 class BonusEntry < ApplicationRecord
-  belongs_to :campaign
-
   has_many :bonus_entry_managements
   has_many :contestant, -> { distinct }, through: :bonus_entry_managements
+  
+  belongs_to :campaign
 
   enum name: [
     :click_link,

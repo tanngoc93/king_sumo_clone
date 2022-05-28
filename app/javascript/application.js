@@ -2,12 +2,8 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-// jquery does not export 'default' but defines window.$ and
-// window.jQuery when loaded:
-// - import 'jquery'; will not work
-// - namespace does not matter here (jq)
-// - no need to redefine it again w/ window.$ = jq.$
-import * as jq from 'jquery';
+import "jquery"
+import "jquery-ui-dist"
+import "jqtree"
 
-// Define a variable to check in inlined HTML script
-window.importmapScriptsLoaded = true;
+import "@nathanvda/cocoon"
