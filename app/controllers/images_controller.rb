@@ -5,9 +5,11 @@ class ImagesController < ApplicationController
     image = Image.create(image_params)
 
     render json: {
-      image_file_html: render_to_string(
-        locals: { id: image.id, url: url_for(image.data) },
-        partial: "campaigns/image_file", 
+      upload_preview: render_to_string(
+        locals: {
+          image: image
+        },
+        partial: "campaigns/upload_preview", 
         formats: :html,
         layout: false
       )

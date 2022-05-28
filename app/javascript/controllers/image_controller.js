@@ -28,7 +28,7 @@ export default class extends Controller {
         }
       })
       .done(function (data) {
-        $("div.d-flex.flex-wrap").prepend(data['image_file_html'])
+        $("div.d-flex.flex-wrap").prepend(data['upload_preview'])
       })
       .always(function () {
         console.log(">>> always")

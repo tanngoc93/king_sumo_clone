@@ -4,13 +4,15 @@ class BonusEntry < ApplicationRecord
   
   belongs_to :campaign
 
-  enum name: [
-    :click_link,
-    :twitter_follow,
-    :facebook_like,
-    :instagram_follow,
-    :youtube_subscribe,
-    :podcast_subscribe,
-    :watch_youtube_video
+  enum name: %i[
+    click_link
+    tiktok_follow
+    twitter_follow
+    facebook_like
+    facebook_follow
+    instagram_follow
+    youtube_subscribe
+    podcast_subscribe
+    watch_youtube_video
   ]
 end

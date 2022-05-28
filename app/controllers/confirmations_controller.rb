@@ -11,13 +11,14 @@ class ConfirmationsController < ApplicationController
   end
 
   private
-    def set_contestant
-      @contestant = Contestant.find_by(confirmation_token: params[:confirmation_token])
-    rescue
-      redirect_to root_path
-    end
 
-    def confirmed_ip
-      request.env["HTTP_X_FORWARDED_FOR"] || request.remote_ip
-    end
+  def set_contestant
+    @contestant = Contestant.find_by(confirmation_token: params[:confirmation_token])
+  rescue
+    redirect_to root_path, notice: "Something went wrong..."
+  end
+
+  def confirmed_ip
+    request.env["HTTP_X_FORWARDED_FOR"] || request.remote_ip
+  end
 end

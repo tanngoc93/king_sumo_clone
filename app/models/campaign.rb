@@ -8,8 +8,6 @@ class Campaign < ApplicationRecord
   has_many :share_actions, dependent: :destroy
   has_many :bonus_entries, dependent: :destroy
 
-  has_many_attached :prize_images
-
   belongs_to :user
 
   extend FriendlyId

@@ -4,13 +4,7 @@ class ShareAction < ApplicationRecord
 
   belongs_to :campaign
 
-  enum name: [
-    :email,
-    :facebook,
-    :messenger,
-    :pinterest,
-    :twitter
-  ]
+  enum name: %i[ email facebook messenger pinterest twitter ]
 
   before_create :set_action_points
 

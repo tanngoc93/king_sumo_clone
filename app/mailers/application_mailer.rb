@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "Markiee Team <marketing@markiee.co>"
+  default from: "Markiee LLC <marketing@markiee.co>"
   layout "mailer"
 end

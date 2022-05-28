@@ -1,22 +1,32 @@
 <% content_for :title do %>
-  Edit Campaign #<%= @campaign.id %> - <%= @campaign.title %>
+  Edit Campaign - <%= @campaign.title %>
 <% end %>
+
 <div class="container">
-  <div class="card" style="box-shadow: 0 10px 35px 0 rgb(99 123 173 / 20%); margin: 25px 0; padding-bottom: 50px; border-radius: 20px;">
+  <div
+    class="card"
+    style="box-shadow: 0 10px 35px 0 rgb(99 123 173 / 20%); margin: 25px 0; padding-bottom: 50px; border-radius: 20px;"
+  >
     <div class="card-body mx-auto">
-      <h4 class="card-title mt-4 text-center">Edit Campaign #<%= @campaign.id %></h4>
+      <h2
+        style="color: #6e7687;"
+        class="card-title mt-4 text-center"
+      >
+      <i>Edit Campaign <strong>#<%= @campaign.id %></strong></i>
+      </h2>
       <%= render 'form', campaign: @campaign %>
     </div>
-  </div> <!-- card.// -->
+  </div>
 </div>
+
 <style type="text/css">
-@media (min-width: 450px) {
-  .card .card-body {
-    width: 55% !important;
+  @media (min-width: 450px) {
+    .card .card-body {
+      width: 55% !important;
+    }
   }
-}
-.card {
-  min-height: 100vh;
-  border: none;
-}
+  .card {
+    min-height: 100vh;
+    border: none;
+  }
 </style>

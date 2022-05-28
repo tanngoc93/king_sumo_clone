@@ -1,10 +1,3 @@
-<h2
-  style="color: #6e7687;"
-  class="card-title mt-4 text-center"
->
-Create Giveaway Campaign
-</h2>
-
 <%= form_with(model: campaign, multipart: true) do |form| %>
   <% if campaign.errors.any? %>
     <div id="error_explanation">
@@ -49,7 +42,7 @@ Create Giveaway Campaign
     </div>
     <div class="col">
       <%= form.label :timezone, class: "form-label", style: "font-weight: bold;" %>
-      <%= form.select :timezone, options_for_select(@timezones.map { |t| [t['value'], t['abbr']] }.sort, @campaign.timezone), {}, { class: "form-control", disabled: false } %>
+      <%= form.select :timezone, options_for_select(@time_zones.map { |t| [t['value'], t['abbr']] }.sort, @campaign.timezone), {}, { class: "form-control", disabled: false } %>
     </div>
   </div>
 
@@ -101,12 +94,16 @@ Create Giveaway Campaign
 
   <div id="add-images" data-controller="image">
     <div class="d-flex flex-wrap mb-1">
-      <div class="add-image-file image-file" style="background-image: url(https://kingsumo.com/img/add-image.svg);">
+      <% if @campaign && @campaign.images.any? %>
+        <% @campaign.images.each do |image| %>
+          <%= render partial: "campaigns/upload_preview", locals: { image: image } %>
+        <% end %>
+      <% end %>
+      <div class="add-image-file image-file" style="background-image: url(//kingsumo.com/img/add-image.svg);">
         <input type="file" accept=".jpg,.jpeg,.png" class="image-file-input" title="Click to edit" style="cursor: pointer;" />
         <p>Add cover image <span class="text-warning">*</span></p>
       </div>
     </div>
-    <input type="hidden" name="image_id">
   </div>
 
   <style type="text/css">

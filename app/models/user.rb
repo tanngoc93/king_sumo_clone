@@ -8,5 +8,5 @@ class User < ApplicationRecord
 
   has_many :campaigns, dependent: :destroy
 
-  enum user_type: [:normal, :shopify]
+  enum user_type: %i[normal shopify]
 end

@@ -1,10 +1,7 @@
-# frozen_string_literal: true
 class HomeController < ApplicationController
-  skip_before_action :authenticate_user!, only: %[ index ]
+  skip_before_action :authenticate_user!, only: %i[ index ]
 
   def index
-    if current_user
-      redirect_to campaigns_path
-    end
+    redirect_to campaigns_path if current_user
   end
 end
