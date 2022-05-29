@@ -1,5 +1,5 @@
 ActionMailer::Base.smtp_settings = {
-  domain:         "em2883.app.markiee.co",
+  domain:         ENV.fetch("SENDGRID_DOMAIN", "").presence,
   address:        "smtp.sendgrid.net",
   port:            587,
   authentication: :plain,
