@@ -49,7 +49,7 @@ services:
         RUBY_VERSION: "3.1.2"
     working_dir: /home/app/html
     environment:
-      REDIS_URL: "redis://redis:6379"
+      REDIS_URL: "redis://redis:6379/0"
       DATABASE_HOST: db
       DATABASE_PORT: 5432
       DATABASE_USER: postgres
@@ -77,10 +77,10 @@ services:
       context: .
       dockerfile: ./.dockerdev/Dockerfile
       args:
-        RUBY_VERSION: "3.0.3"
+        RUBY_VERSION: "3.1.2"
     working_dir: /home/app/html
     environment:
-      REDIS_URL: "redis://redis:6379"
+      REDIS_URL: "redis://redis:6379/0"
       DATABASE_HOST: db
       DATABASE_PORT: 5432
       DATABASE_USER: postgres

@@ -135,23 +135,18 @@ GEM
       railties (>= 5.0.0)
     faker (2.21.0)
       i18n (>= 1.8.11, < 2)
-    faraday (2.3.0)
-      faraday-net_http (~> 2.0)
-      ruby2_keywords (>= 0.0.4)
-    faraday-net_http (2.0.3)
     ffi (1.15.5)
     friendly_id (5.4.2)
       activerecord (>= 4.0.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
-    graphql (2.0.8)
-    graphql-client (0.18.0)
-      activesupport (>= 3.0)
-      graphql
-    hashie (5.0.0)
+    hash_diff (1.0.0)
     http-accept (1.7.0)
     http-cookie (1.0.4)
       domain_name (~> 0.5)
+    httparty (0.20.0)
+      mime-types (~> 3.0)
+      multi_xml (>= 0.5.2)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
     image_processing (1.12.2)
@@ -203,10 +198,7 @@ GEM
     mini_mime (1.1.2)
     minitest (5.15.0)
     msgpack (1.5.1)
-    multi_json (1.15.0)
     multi_xml (0.6.0)
-    net-http (0.2.2)
-      uri
     net-imap (0.2.3)
       digest
       net-protocol
@@ -225,25 +217,8 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.13.6-x86_64-linux)
       racc (~> 1.4)
-    oauth2 (1.4.9)
-      faraday (>= 0.17.3, < 3.0)
-      jwt (>= 1.0, < 3.0)
-      multi_json (~> 1.3)
-      multi_xml (~> 0.5)
-      rack (>= 1.2, < 3)
-    omniauth (2.1.0)
-      hashie (>= 3.4.6)
-      rack (>= 2.2.3)
-      rack-protection
-    omniauth-oauth2 (1.7.2)
-      oauth2 (~> 1.4)
-      omniauth (>= 1.9, < 3)
-    omniauth-rails_csrf_protection (1.0.1)
-      actionpack (>= 4.2)
-      omniauth (~> 2.0)
-    omniauth-shopify-oauth2 (2.3.2)
-      activesupport
-      omniauth-oauth2 (~> 1.5)
+    oj (3.13.13)
+    openssl (3.0.0)
     orm_adapter (0.5.0)
     pg (1.3.5)
     popper_js (2.9.3)
@@ -252,8 +227,6 @@ GEM
       nio4r (~> 2.0)
     racc (1.6.0)
     rack (2.2.3)
-    rack-protection (2.2.0)
-      rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (7.0.3)
@@ -324,7 +297,6 @@ GEM
       rexml
     ruby-vips (2.1.4)
       ffi (~> 1.12)
-    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     sassc (2.4.0)
       ffi (~> 1.9)
@@ -334,29 +306,37 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    securerandom (0.2.0)
     seed_migration (1.2.3)
     selenium-webdriver (4.1.0)
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
-    shopify_api (9.5.1)
-      activeresource (>= 4.1.0)
-      graphql-client
-      rack
-    shopify_app (18.1.2)
+    shopify_api (10.1.0)
+      concurrent-ruby
+      hash_diff
+      httparty
+      jwt
+      oj
+      openssl
+      securerandom
+      sorbet-runtime
+      zeitwerk (~> 2.5)
+    shopify_app (19.0.2)
+      activeresource
       browser_sniffer (~> 1.4.0)
       jwt (>= 2.2.3)
-      omniauth-rails_csrf_protection
-      omniauth-shopify-oauth2 (~> 2.3)
       rails (> 5.2.1)
       redirect_safely (~> 1.0)
-      shopify_api (~> 9.4)
+      shopify_api (~> 10.0)
+      sprockets-rails (>= 2.0.0)
     shoulda-matchers (5.1.0)
       activesupport (>= 5.2.0)
     sidekiq (6.4.2)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
+    sorbet-runtime (0.5.10037)
     sprockets (4.0.3)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -379,7 +359,6 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.1)
-    uri (0.11.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.0)
@@ -403,7 +382,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
-  bootstrap (~> 5.1.3)
+  bootstrap
   capybara
   cloudinary
   cocoon
@@ -419,7 +398,6 @@ DEPENDENCIES
   kaminari
   letter_opener
   letter_opener_web
-  net-http
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.3)
@@ -428,7 +406,7 @@ DEPENDENCIES
   sassc-rails
   seed_migration
   selenium-webdriver
-  shopify_app (~> 18.0)
+  shopify_app (~> 19.0, >= 19.0.2)
   shoulda-matchers
   sidekiq
   sprockets-rails

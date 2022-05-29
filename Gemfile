@@ -30,7 +30,7 @@ gem "bootsnap", require: false
 
 gem "sassc-rails"
 
-gem "bootstrap", "~> 5.1.3"
+gem "bootstrap"
 
 gem "devise"
 
@@ -46,11 +46,9 @@ gem "sidekiq"
 
 gem "seed_migration"
 
-gem "shopify_app", "~> 18.0"
-
 gem "image_processing", ">= 1.2"
 
-gem "net-http", :group => :development
+gem 'shopify_app', '~> 19.0', '>= 19.0.2'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
