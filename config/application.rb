@@ -25,9 +25,9 @@ module Mycake
       'X-Frame-Options' => 'ALLOWALL'
     }
 
-    # config.active_job.queue_adapter = :sidekiq
+    config.active_job.queue_adapter = :sidekiq
 
-    # config.action_mailer.deliver_later_queue_name = "mailers"
+    config.action_mailer.deliver_later_queue_name = "mailers"
 
     config.hosts << "https://b153-113-172-46-152.ap.ngrok.io" if Rails.env.development?
   end
