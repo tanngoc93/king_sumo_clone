@@ -1,11 +1,12 @@
-ARG RUBY_VERSION
+FROM ruby:3.1.2
 
-FROM ruby:${RUBY_VERSION}
+ARG ARG_RAILS_MASTER_KEY
 
 ENV PORT=3000 \
-    RAILS_ENV=development \
+    RAILS_ENV=production \
     APP_DIR=/home/app/html \
-    BUNDLE_PATH=/bundle/vendor
+    BUNDLE_PATH=/bundle/vendor \
+    RAILS_MASTER_KEY=${ARG_RAILS_MASTER_KEY}
 
 RUN apt-get update -qq \
   && apt-get install -yq --no-install-recommends \
@@ -14,13 +15,13 @@ RUN apt-get update -qq \
     curl \
     less \
     git \
-    graphviz \
   && apt-get clean \
   && rm -rf /var/cache/apt/archives/* \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
   && truncate -s 0 /var/log/*log
 
 RUN mkdir -p $APP_DIR $APP_DIR/log $APP_DIR/tmp/pids
+
 RUN apt-get update -qq && apt-get install -y postgresql-client
 
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
@@ -53,9 +54,12 @@ ENV BUNDLE_APP_CONFIG=.bundle
 
 # Upgrade RubyGems and install latest Bundler
 RUN gem update --system && \
-    gem install bundler && bundle install
+    gem install bundler && \
+    bundle config set --local without 'development test' && bundle install
 
 COPY . $APP_DIR/
+
+RUN bundle exec rails assets:precompile
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

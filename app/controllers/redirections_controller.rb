@@ -3,7 +3,6 @@ class RedirectionsController < ApplicationController
   before_action :set_contestant, only: %i[ new ]
 
   def new
-    redirect_to root_url unless @contestant
 
     campaign = @contestant.campaign
 

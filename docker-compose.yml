@@ -46,7 +46,7 @@ services:
       context: .
       dockerfile: ./.dockerdev/Dockerfile
       args:
-        RUBY_VERSION: "3.0.3"
+        RUBY_VERSION: "3.1.2"
     working_dir: /home/app/html
     environment:
       REDIS_URL: "redis://redis:6379"
@@ -78,7 +78,6 @@ services:
       dockerfile: ./.dockerdev/Dockerfile
       args:
         RUBY_VERSION: "3.0.3"
-        ARG_RAILS_MASTER_KEY: "75befa9e36f167157458c6f0bc22c560"
     working_dir: /home/app/html
     environment:
       REDIS_URL: "redis://redis:6379"

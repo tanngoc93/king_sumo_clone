@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   get  "/confirmation/:confirmation_token",   to: "confirmations#edit", as: :contestant_confirmation
 
-  get  "/:secret_code",                       to: "redirections#new",   as: :redirection
+  get  "/redir/:secret_code",                 to: "redirections#new",   as: :redirection
 
   root "home#index"
 

@@ -20,6 +20,15 @@ module Mycake
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.time_zone = "Central Time (US & Canada)"
+
+    config.action_dispatch.default_headers = {
+      'X-Frame-Options' => 'ALLOWALL'
+    }
+
     config.active_job.queue_adapter = :sidekiq
+
+    config.action_mailer.deliver_later_queue_name = "mailers"
+
+    config.hosts << "https://b153-113-172-46-152.ap.ngrok.io" if Rails.env.development?
   end
 end

@@ -33,4 +33,5 @@ test:
   database: <%= ENV.fetch("DATABASE_TEST") { 'data_test' } %>
 
 production:
-  url: <%= ENV['DATABASE_URL'] %>
+  <<: *default
+  database: <%= ENV.fetch("DATABASE_PRODUCTION") { 'data_test' } %>

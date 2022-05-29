@@ -29,7 +29,7 @@
               <a class="promo-act-btn promo-facebook" href="https://www.facebook.com/sharer/sharer.php?u=<%= root_url.chomp("/") + contestant_register_path(@campaign) %>&amp;title=<%= @campaign.title %>&amp;description=<%= @campaign.description %>" target="_blank">Share on Facebook</a>
               <button class="promo-act-btn promo-embed">Embed the giveaway widget on your website</button>
               <div>
-                <textarea class="border-0 rounded bg-light p-3 w-100 text-dark" rows="9" id="copy-promo-embed-code" readonly><div id="gemkhin-embed" data-url="<%= root_url.chomp("/") + contestant_register_path(@campaign) %>"></div> <script type="text/javascript" src="https://gemkhin.com/javascripts/embed.js"></script></textarea>
+                <textarea class="border-0 rounded bg-light p-3 w-100 text-dark" rows="9" id="copy-promo-embed-code" readonly><div id="giveaway-embed" data-url="<%= root_url.chomp("/") + contestant_register_path(@campaign) %>"></div> <script type="text/javascript" src="<%= root_url %>javascript/embed.js"></script></textarea>
                 <style type="text/css">
                   textarea#copy-promo-embed-code {
                     overflow: hidden;
