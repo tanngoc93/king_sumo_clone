@@ -48,7 +48,9 @@ gem "seed_migration"
 
 gem "image_processing", ">= 1.2"
 
-gem 'shopify_app', '~> 19.0', '>= 19.0.2'
+gem "shopify_app", "~> 19.0", ">= 19.0.2"
+
+gem "sendgrid-ruby"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

@@ -297,6 +297,7 @@ GEM
       rexml
     ruby-vips (2.1.4)
       ffi (~> 1.12)
+    ruby_http_client (3.5.5)
     rubyzip (2.3.2)
     sassc (2.4.0)
       ffi (~> 1.9)
@@ -312,6 +313,8 @@ GEM
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
+    sendgrid-ruby (6.6.2)
+      ruby_http_client (~> 3.4)
     shopify_api (10.1.0)
       concurrent-ruby
       hash_diff
@@ -406,6 +409,7 @@ DEPENDENCIES
   sassc-rails
   seed_migration
   selenium-webdriver
+  sendgrid-ruby
   shopify_app (~> 19.0, >= 19.0.2)
   shoulda-matchers
   sidekiq

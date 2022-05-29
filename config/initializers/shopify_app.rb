@@ -16,7 +16,7 @@
 #   config.allow_cookie_authentication = false
 
 #   config.api_key = ENV.fetch('SHOPIFY_API_KEY', '').presence
-#   config.secret = ENV.fetch('SHOPIFY_API_SECRET', '').presence
+#   config.secret  = ENV.fetch('SHOPIFY_API_SECRET', '').presence
 
 #   if defined? Rails::Server
 #     raise('Missing SHOPIFY_API_KEY. See https://github.com/Shopify/shopify_app#requirements') unless config.api_key

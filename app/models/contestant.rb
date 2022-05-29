@@ -18,16 +18,14 @@ class Contestant < ApplicationRecord
 
   validates :secret_code, :confirmation_token, :referral_code, uniqueness: true
 
-  before_create :set_confirmation_token, :set_secret_code, :set_referral_code
-  # after_create :send_confirmation_email
+  before_create  :set_confirmation_token, :set_secret_code, :set_referral_code
+  after_create   :send_confirmation_email
   before_destroy :destroy_bonus_entry_managements, :destroy_share_action_managements
 
   private
 
   def send_confirmation_email
-    if ContestantMailer.with(contestant: self).confirmation_email.deliver_later
-      self.update(confirmation_sent_at: DateTime.now)
-    end
+    ContestantMailer.with(contestant: self).confirmation_email.deliver_later
   end
 
   def set_secret_code
