@@ -19,7 +19,7 @@ class Contestant < ApplicationRecord
   validates :secret_code, :confirmation_token, :referral_code, uniqueness: true
 
   before_create :set_confirmation_token, :set_secret_code, :set_referral_code
-  after_create :send_confirmation_email
+  # after_create :send_confirmation_email
   before_destroy :destroy_bonus_entry_managements, :destroy_share_action_managements
 
   private

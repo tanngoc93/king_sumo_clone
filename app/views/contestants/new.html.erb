@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @campaign.title %> - <%= @campaign.offered_by_name %>
+  <%= @campaign.offered_by_name %> | <%= @campaign.title %>
 <% end %>
 
 <% content_for :facebook_properties do %>
@@ -11,11 +11,11 @@
 <% end %>
 
 <div class="page-width page-width--narrow card mx-auto" style="max-width: 72.5rem; margin: 25px 0; box-shadow: 0 10px 25px 0 rgb(99 123 173 / 20%); border-radius: 20px;">
-  <% if @campaign.images.size > 0 %>
+  <% if @campaign.images.any? %>
     <div id="carouselGiveaway" class="carousel slide" data-bs-ride="carousel" style="height: 350px">
       <div class="carousel-inner">
         <% @campaign.images.each_with_index do |image, index| %>
-          <div class="carousel-item <%= index === 0 ? "active" : nil %>">
+          <div class="carousel-item <%= index === 0 ? "active" : "" %>">
             <div class="d-block w-100" style="z-index: 99; height: 300px; border-radius: 20px 20px 0 0; background-image: url(<%= url_for(image.data) %>); background-repeat: no-repeat; background-position: top center; background-size: cover;">
             </div>
           </div>
@@ -31,7 +31,7 @@
       </button>
     </div>
   <% end %>
-  <div class="card-body" style="box-shadow: 0 10px 35px 0 rgb(99 123 173 / 20%); margin: <%= @campaign.images.size > 0 ? "-65px 0 0 0" : "0" %>; padding: 35px 44px; border-radius: 20px; background-color: #FFF; z-index: 9999;">
+  <div class="card-body" style="box-shadow: 0 10px 35px 0 rgb(99 123 173 / 20%); margin: <%= @campaign.images.any? ? "-65px 0 0 0" : "0" %>; padding: 35px 44px; border-radius: 20px; background-color: #FFF; z-index: 9999;">
     <% unless @campaign.campaign_time_out? %>
       <h1 class="card-title mb-4 text-center"><%= @campaign.title %></h1>
       <div class="hr-title h6">
@@ -69,14 +69,31 @@
         <p class="text-center"><b>Enter with your email address or facebook:</b></p>
       </div>
       <div class="register-form mx-auto" style="max-width: 440px; margin: 1rem 0;">
-        <%= form_with(model: @contestant, url: contestant_register_path(@campaign), id: "contestant-register-form", class: "needs-validation", local: false) do |form| %>
+        <%= form_with(
+          url: contestant_register_path(@campaign),
+          model: @contestant,
+          data: {
+            "type": "html",
+            "controller": "contestants",
+            "target": "contestants.form",
+            "contestants-url": contestant_register_path(@campaign)
+          },
+          class: "needs-validation"
+        ) do |form| %>
+
           <div class="">
             <div class="input-group has-validation">
-              <%= form.text_field :email, class: "form-control", placeholder: "Enter your email", required: true %>
-              <%= form.submit "ENTER", id: "contestant-btn", class: "btn btn-success", disabled: true %>
-              <div class="invalid-feedback">
-                Your have entered an invalid e-mail address!
-              </div>
+              <%= form.text_field :email, data: { "contestants-target": "email" }, class: "form-control", placeholder: "Enter your email", required: true %>
+              <%=
+                form.submit "ENTER",
+                data: {
+                  remote: true,
+                  action: "click->contestants#ajaxSubmit"
+                },
+                disabled: true,
+                class: "btn btn-success"
+              %>
+              <div class="invalid-feedback">Your have entered an invalid e-mail address!</div>
             </div>
           </div>
           <p class="text-muted mt-3" style="text-align: center;">
@@ -103,7 +120,6 @@
     </p>
   </div>
 </div>
-<!-- card.// -->
 
 <style type="text/css">
 @media (min-width: 960px) {
@@ -339,9 +355,10 @@ h6 {
 }
 </style>
 
-<script src="https://gemkhin.com/javascripts/iframeResizer.contentWindow.min.js"></script>
+<!-- <script src="https://gemkhin.com/javascripts/iframeResizer.contentWindow.min.js"></script> -->
 
 <script type="text/javascript">
+
   // Set the date we're counting down to
   var countDownDate = new Date("<%= @campaign.ends_at %>").getTime();
   
@@ -359,47 +376,21 @@ h6 {
     var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-  
+
     document.getElementById("countdown-days").innerHTML = days
     document.getElementById("countdown-hours").innerHTML = hours
     document.getElementById("countdown-minutes").innerHTML = minutes
     document.getElementById("countdown-seconds").innerHTML = seconds
-  
+
     // Display the result in the element with id="demo"
     // document.getElementById("demo").innerHTML = days + "d " + hours + "h "
     // + minutes + "m " + seconds + "s ";
-  
+
     // If the count down is finished, write some text
     if (distance < 0) {
       clearInterval(x);
       document.getElementById("demo").innerHTML = "EXPIRED";
     }
   }, 1000);
-</script>
 
-<script type="text/javascript">
-  $( document ).ready(function() {
-
-    const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    $("input#contestant_email").on('propertychange input', function (e) {
-      var valueChanged = false;
-
-      if (e.type=='propertychange') {
-          valueChanged = e.originalEvent.propertyName == 'value';
-      } else {
-          valueChanged = true;
-      }
-
-      if (valueChanged && regex.test($("input#contestant_email").val())) {
-        $("input#contestant-btn").attr("disabled", false);
-        $("input#contestant_email").removeClass("is-invalid");
-        $("form#contestant-register-form").addClass("was-validated");
-      } else {
-        $("input#contestant-btn").attr("disabled", true);
-        $("input#contestant_email").addClass("is-invalid");
-      }
-    });
-
-  });
 </script>

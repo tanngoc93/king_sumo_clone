@@ -3,9 +3,11 @@ class RedirectionsController < ApplicationController
   before_action :set_contestant, only: %i[ new ]
 
   def new
+    redirect_to root_url unless @contestant
+
     campaign = @contestant.campaign
 
-    if ShareAction.names.key?(params[:event])
+    if ShareAction.names.key?( params[:event] )
 
       ShareActionManagement.find_or_create_by(contestant: @contestant, share_action: ShareAction.find_by(name: params[:event]))
 
@@ -32,9 +34,10 @@ class RedirectionsController < ApplicationController
   end
 
   private
-    def set_contestant
-      @contestant = Contestant.find_by(secret_code: params[:secret_code])
-    rescue
-      redirect_to root_path
-    end
+
+  def set_contestant
+    @contestant = Contestant.find_by(secret_code: params[:secret_code])
+  rescue
+    redirect_to root_path, notice: "Something went wrong..."
+  end
 end

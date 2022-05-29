@@ -1,8 +1,8 @@
 class ImagesController < ApplicationController
-  protect_from_forgery with: :null_session, only: [:create]
+  protect_from_forgery with: :null_session
 
   def create
-    image = Image.create(image_params)
+    image = Image.create!(image_params)
 
     render json: {
       upload_preview: render_to_string(

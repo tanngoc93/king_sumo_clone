@@ -4,6 +4,6 @@
 >
   <input type="hidden" name="prize_images[]" value="<%= image.id %>">
   <div class="edit-image-file">
-    <button type="button" class="icon-delete" title="Remove image" data-action="click->image#removeImage" data-id="<%= image.id %>"></button>
+    <button type="button" class="icon-delete" title="Remove image" data-action="click->images#remove" data-id="<%= image.id %>"></button>
   </div>
 </div>

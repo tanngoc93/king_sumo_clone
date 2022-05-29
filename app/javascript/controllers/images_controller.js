@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
+
     $(".add-image-file").on("change", function (e) {
 
       let file = $(this).find("input.image-file-input")[0].files[0];
@@ -15,28 +16,28 @@ export default class extends Controller {
 
     const upload = (data) => {
       $.ajax({
+        method: 'POST',
         url: '/images',
         data: data,
         processData: false,
-        type: 'POST',
         contentType: false,
         cache: false,
         mimeType: 'multipart/form-data',
         dataType: 'JSON',
         beforeSend: function() {
-          console.log(">>> Uploading...")
+          // do something
         }
       })
       .done(function (data) {
         $("div.d-flex.flex-wrap").prepend(data['upload_preview'])
       })
       .always(function () {
-        console.log(">>> always")
+        // always do something
       })
     }
   }
 
-  removeImage(event) {
+  remove(event) {
     event.preventDefault()
 
     const id = event.target.dataset.id
@@ -49,4 +50,5 @@ export default class extends Controller {
       $(`.image-file-${id}`).remove();
     });
   }
+
 }

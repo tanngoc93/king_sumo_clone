@@ -3,11 +3,11 @@ require "sidekiq/web"
 Rails.application.routes.draw do
   devise_for :users
 
+  resources :images, only: [:create, :destroy]
+
   resources :campaigns do
     resources :contestants, only: [:index, :destroy]
   end
-
-  resources :images, only: [:create, :destroy]
 
   get  "/campaign/:campaign_id/:secret_code", to: "contestants#show",  as: :contestant_registered
   get  "/campaign/:campaign_id",              to: "contestants#new"
@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   get  "/confirmation/:confirmation_token",   to: "confirmations#edit", as: :contestant_confirmation
 
-  # get  "/:secret_code",                       to: "redirections#new",   as: :redirection
+  get  "/:secret_code",                       to: "redirections#new",   as: :redirection
 
   root "home#index"
 
