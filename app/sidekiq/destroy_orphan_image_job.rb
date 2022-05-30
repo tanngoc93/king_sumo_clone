@@ -1,4 +1,4 @@
-class ImageJob
+class DestroyOrphanImageJob
   include Sidekiq::Job
 
   def perform(id, *args)
