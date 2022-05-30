@@ -8,7 +8,17 @@
 
 #### It's an unpublish app on Shopify. So you only can install this app with a Shopify's developing store!!!
 
-* Ruby 2.7.2
-* Rails 6.1.4
+* Ruby 3.x.x
+* Rails 7.x.x
 * Redis & Sidekiq latest version
 * Docker & DockerCompose latest version
+
+#### Build & Run app with Docker
+
+```html
+docker-compose build 
+```
+
+```html
+docker-compose up 
+```
