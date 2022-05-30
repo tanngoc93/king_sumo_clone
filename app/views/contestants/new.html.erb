@@ -16,7 +16,7 @@
       <div class="carousel-inner">
         <% @campaign.images.each_with_index do |image, index| %>
           <div class="carousel-item <%= index === 0 ? "active" : "" %>">
-            <div class="d-block w-100" style="z-index: 99; height: 330px; border-radius: 20px 20px 0 0; background-image: url(<%= url_for(image.data) %>); background-repeat: no-repeat; background-position: top center; background-size: cover;">
+            <div class="d-block w-100" style="z-index: 99; height: 330px; border-radius: 20px 20px 0 0; background-image: url(<%= url_for(image.data) %>); background-repeat: no-repeat; background-position: bottom center; background-size: cover;">
             </div>
           </div>
         <% end %>
