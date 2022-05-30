@@ -10,15 +10,18 @@
 
 * Ruby 3.x.x
 * Rails 7.x.x
-* Redis & Sidekiq latest version
-* Docker & DockerCompose latest version
+* PostgreSQL > 10.x.x
+* Redis & Sidekiq for background jobs
+* Docker & Docker Compose latest version
 
-#### Build & Run app with Docker
+#### Build & run app with Docker
 
+* How to build
 ```html
 docker-compose build 
 ```
 
+* How to run
 ```html
-docker-compose up 
+docker-compose up
 ```
