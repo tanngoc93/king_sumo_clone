@@ -11,14 +11,12 @@ volumes:
 
 services:
   redis:
-    container_name: redis
     image: redis:7.0.0
     command: redis-server
     networks:
       - bridge-network
 
   db:
-    container_name: db
     image: postgres:14.0
     environment:
       POSTGRES_USER: postgres
@@ -31,7 +29,6 @@ services:
       - bridge-network
 
   adminer:
-    container_name: adminer
     image: adminer
     ports:
       - 8080:8080
@@ -39,7 +36,6 @@ services:
       - bridge-network
 
   web:
-    container_name: web
     tty: true
     stdin_open: true
     build:
@@ -72,7 +68,6 @@ services:
       - bridge-network
 
   sidekiq:
-    container_name: sidekiq
     build:
       context: .
       dockerfile: ./.dockerdev/Dockerfile

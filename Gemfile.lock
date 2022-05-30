@@ -406,6 +406,7 @@ DEPENDENCIES
   rails (~> 7.0.3)
   rails-erd
   rspec-rails
+  ruby-vips
   sassc-rails
   seed_migration
   selenium-webdriver
