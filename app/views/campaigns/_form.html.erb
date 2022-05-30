@@ -1,29 +1,25 @@
 <%= form_with(model: campaign, multipart: true) do |form| %>
   <% if campaign.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(campaign.errors.count, "error") %> prohibited this campaign from being saved:</h2>
-      <ul>
-        <% campaign.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
+  <div id="error_explanation">
+    <h2><%= pluralize(campaign.errors.count, "error") %> prohibited this campaign from being saved:</h2>
+    <ul>
+      <% campaign.errors.each do |error| %>
+      <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  </div>
   <% end %>
-
   <p class="divider-text">
     <span class="bg-light">Giveaway Information </span>
   </p>
-
   <div class="mb-3">
     <%= form.label :title, class: "form-label", style: "font-weight: bold;" %>
     <%= form.text_field :title, required: true, placeholder: "Enter To Win A Microsoft Surface 2017", class: "form-control" %>
   </div>
-
   <div class="mb-3">
     <%= form.label :description, class: "form-label", style: "font-weight: bold;" %>
-    <%= form.text_area :description, id: "editor", class: "form-control" %>
+    <%= form.text_area :description, data: { controller: "ckeditor" }, id: "ckeditor", class: "form-control" %>
   </div>
-
   <div class="row mb-3">
     <div class="col">
       <%= form.label :starts_at, class: "form-label", style: "font-weight: bold;" %>
@@ -34,7 +30,6 @@
       <%= form.datetime_field :ends_at, required: true, value: (Time.now + 7.days).strftime("%Y-%m-%dT%H:%M"), class: "form-control" %>
     </div>
   </div>
-
   <div class="row mb-3">
     <div class="col">
       <%= form.label :awarded_at, class: "form-label", style: "font-weight: bold;" %>
@@ -45,13 +40,10 @@
       <%= form.select :timezone, options_for_select(@time_zones.map { |t| [t['value'], t['abbr']] }.sort, @campaign.timezone), {}, { class: "form-control", disabled: false } %>
     </div>
   </div>
-
   <br />
-
   <p class="divider-text">
     <span class="bg-light"> Who's Running This Giveaway? </span>
   </p>
-
   <div class="row mb-3">
     <div class="col">
       <label class="form-label" for="campaign_offered_by_name" style="font-weight: bold;">Business's name</label>
@@ -62,18 +54,14 @@
       <%= form.url_field :offered_by_url, required: true, placeholder: "https://microsoft.com", class: "form-control" %>
     </div>
   </div>
-
   <br />
-
   <p class="divider-text">
     <span class="bg-light">What Are You Giving Away? </span>
   </p>
-
   <div class="mb-3">
     <label class="form-label" style="font-weight: bold;" for="campaign_winner_prize_name">Prize name</label>
     <%= form.text_field :winner_prize_name, required: true, placeholder: "Microsoft Surface Pro 2021", class: "form-control" %>
   </div>
-
   <div class="row mb-3">
     <div class="col">
       <label class="form-label" style="font-weight: bold;" for="campaign_winner_prize_value">Number of Winners</label>
@@ -87,17 +75,15 @@
       </div>
     </div>
   </div>
-
   <div class="row mb-3">
     <span class="bg-light text-center">Prize Images</span>
   </div>
-
   <div id="add-images" data-controller="images">
     <div class="d-flex flex-wrap mb-1">
       <% if @campaign && @campaign.images.any? %>
-        <% @campaign.images.each do |image| %>
-          <%= render partial: "campaigns/upload_preview", locals: { image: image } %>
-        <% end %>
+      <% @campaign.images.each do |image| %>
+      <%= render partial: "campaigns/upload_preview", locals: { image: image } %>
+      <% end %>
       <% end %>
       <div class="add-image-file image-file" style="background-image: url(//kingsumo.com/img/add-image.svg);">
         <input type="file" accept=".jpg,.jpeg,.png" class="image-file-input" title="Click to edit" style="cursor: pointer;" />
@@ -105,355 +91,294 @@
       </div>
     </div>
   </div>
-
-  <style type="text/css">
-
-    .edit-image-file {
-    position: absolute;
-    bottom: -34px;
-    width: 106px;
-    text-align: center;
-}
-
-.icon-delete {
-    background-image: url(https://kingsumo.b-cdn.net/img/icon-delete.svg);
-}
-
-.icon-delete, .icon-edit {
-    height: 20px;
-    width: 23px;
-    background-position: 50%;
-    background-size: 100%;
-    background-repeat: no-repeat;
-    bottom: -25px;
-    display: inline-block;
-    border: 0;
-    margin: 0 5px;
-    background-color: #fff;
-}
-
-    .add-image-file {
-    margin-right: 15px;
-    width: 106px;
-    height: 99px;
-    background-position: 50%;
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-image: url(/img/add-image.svg);
-    margin-bottom: 45px;
-}
-
-.image-file {
-    width: 106px;
-    height: 99px;
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-size: cover;
-    position: relative;
-    border-radius: 0.4rem;
-    display: inline-block;
-    margin-bottom: 55px;
-    margin-right: 15px;
-}
-
-.image-file-input {
-    width: 106px;
-    height: 99px;
-    margin: 0;
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    cursor: pointer;
-}
-
-input[type="file" i] {
-    appearance: none;
-    background-color: initial;
-    cursor: default;
-    align-items: baseline;
-    color: inherit;
-    text-overflow: ellipsis;
-    white-space: pre;
-    text-align: start !important;
-    padding: initial;
-    border: initial;
-    overflow: hidden !important;
-}
-
-.add-image-file p {
-    padding-top: 44px;
-    line-height: 1.3;
-    text-align: center;
-    color: #aeb8c4;
-}
-
-p {
-    margin-top: 0;
-    margin-bottom: 1rem;
-}
-
-.text-warning {
-    color: #f58b00!important;
-}
-
-.add-image-file p {
-    padding-top: 44px;
-    line-height: 1.3;
-    text-align: center;
-    color: #aeb8c4;
-}
-  </style>
-
   <br />
-
   <p class="divider-text">
     <span class="bg-light"> 4. Sharing </span>
   </p>
-
   <div class="mb-3">
     <p>Click to select the platforms you want your contestants to use to share your giveaway:</p>
-
     <%= form.fields_for :share_actions do |action| %>
-      <%= render "share_action_fields", :f => action %>
+    <%= render "share_action_fields", :f => action %>
     <% end %>
   </div>
-
   <br />
-
   <p class="divider-text">
     <span class="bg-light"> 5. Bonus Entries </span>
   </p>
-
   <div class="mb-3">
     <p>These are actions a contestant can take to get even more entries:</p>
   </div>
-
   <%= form.fields_for :bonus_entries do |bonus| %>
-    <%= render "bonus_entry_fields", :f => bonus %>
+  <%= render "bonus_entry_fields", :f => bonus %>
   <% end %>
-
   <div class="" style="width:  100%; text-align: center;">
     <%= link_to_add_association 'add more bonus entry', form, :bonus_entries, class: "btn btn-dark btn-circle btn-circle-lg" %>
   </div>
-
   <br />
-
   <p class="divider-text">
     <span class="bg-light"> 6. EU GDPR consent checkbox </span>
   </p>
-
   <div class="mb-3">
     <p>Are you planning to send your entrants marketing messages after the giveaway? Are any of your contestants located in the EU? If yes, or you’re not sure, enable the checkbox option below so your contestants can give clear consent as required by EU GDPR:</p>
-
     <%= form.check_box :gdpr, class: "form-check-input" %>
     <%= form.label "Require GDPR Consent", class: "form-label", style: "font-weight: bold;", for: "campaign_gdpr" %>
   </div>
-
   <p class="divider-text">
     <span class="bg-light">Done</span>
   </p>
-
   <div class="actions text-center">
     <%= link_to "Cancel", :back, data: { confirm: 'Go back without saving?' }, class: "btn btn-secondary", style: "border-radius: 0px;" %>&nbsp;
     <%= form.submit "Save", class: "btn btn-success", style: "border-radius: 0px;" %>
   </div>
 <% end %>
 
-<script>
-  ClassicEditor.create( document.querySelector( "#editor" ), {
-    language: {
-      language: "en"
-    },
-    toolbar: [ "heading", "|", "bold", "italic", "link", "bulletedList", "numberedList", "blockQuote", "undo", "redo" ]
-  })
-  .then( editor => {
-      window.editor = editor;
-  } )
-  .catch( error => {
-    console.error( error );
-  });
-</script>
-
 <style type="text/css">
-  /*
-*
-* ==========================================
-* CUSTOM UTIL CLASSES
-* ==========================================
-*
-*/
+  .btn-circle {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    padding: 0;
+    border-radius: 50%;
+  }
 
-.btn-circle {
-  width: 45px;
-  height: 45px;
-  line-height: 45px;
-  text-align: center;
-  padding: 0;
-  border-radius: 50%;
-}
+  .btn-circle i {
+    position: relative;
+    top: -1px;
+  }
 
-.btn-circle i {
-  position: relative;
-  top: -1px;
-}
+  .btn-circle-sm {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 0.9rem;
+  }
 
-.btn-circle-sm {
-  width: 35px;
-  height: 35px;
-  line-height: 35px;
-  font-size: 0.9rem;
-}
+  .btn-circle-lg {
+    width: 55px;
+    height: 55px;
+    line-height: 55px;
+    font-size: 1.1rem;
+  }
 
-.btn-circle-lg {
-  width: 55px;
-  height: 55px;
-  line-height: 55px;
-  font-size: 1.1rem;
-}
-
-.btn-circle-xl {
-  width: 70px;
-  height: 70px;
-  line-height: 70px;
-  font-size: 1.3rem;
-}
-
-/*
-*
-* ==========================================
-* FOR DEMO PURPOSES
-* ==========================================
-*
-*/
-
-body {
-  background: #f8f8fd;
-  color: #514B64;
-  min-height: 100vh;
-}
+  .btn-circle-xl {
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    font-size: 1.3rem;
+  }
 </style>
 
 <style>
-.ck-editor__editable_inline {
-  min-height: 400px;
-}
+  .ck-editor__editable_inline {
+    min-height: 400px;
+  }
 </style>
 <style type="text/css">
-.imagePreview {
-  width: 100%;
-  height: 150px;
-  background: url(//cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg);
-  background-color: #ebebeb;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-  display: inline-block;
-  box-shadow: 0px -3px 6px 2px rgba(0, 0, 0, 0.2);
-}
+  .imagePreview {
+    width: 100%;
+    height: 150px;
+    background: url(//cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg);
+    background-color: #ebebeb;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: inline-block;
+    box-shadow: 0px -3px 6px 2px rgba(0, 0, 0, 0.2);
+  }
 
-label.btn.btn-success,
-label.btn.btn-warning {
-  width: 130px;
-  border-radius: 0px;
-  box-shadow: 0px 4px 6px 2px rgba(0, 0, 0, 0.2);
-  margin-top: -50px;
-}
+  label.btn.btn-success,
+  label.btn.btn-warning {
+    width: 130px;
+    border-radius: 0px;
+    box-shadow: 0px 4px 6px 2px rgba(0, 0, 0, 0.2);
+    margin-top: -50px;
+  }
 
-.imgUp {
-  margin-bottom: 15px;
-}
+  .imgUp {
+    margin-bottom: 15px;
+  }
 
-.del, .del-on-server {
-  position: absolute;
-  top: 0px;
-  right: 15px;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  line-height: 30px;
-  background-color: rgba(255, 255, 255, 0.6);
-  cursor: pointer;
-}
+  .del, .del-on-server {
+    position: absolute;
+    top: 0px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    background-color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+  }
 
-.imgAdd {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #4bd7ef;
-  color: #fff;
-  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  line-height: 30px;
-  margin: auto;
-  cursor: pointer;
-  font-size: 15px;
-  padding: 0;
-}
+  .imgAdd {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #4bd7ef;
+    color: #fff;
+    box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    line-height: 30px;
+    margin: auto;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 0;
+  }
+</style>
 
-</style><style type="text/css">.field_with_errors {
-  width: 100%;
-}
+<style type="text/css">
+  .field_with_errors {
+    width: 100%;
+  }
 
-.ck-editor__editable_inline {
-  min-height: 200px;
-}
+  .ck-editor__editable_inline {
+    min-height: 200px;
+  }
 
-.divider-text {
-  position: relative;
-  text-align: center;
-  margin-top: 25px;
-  margin-bottom: 25px;
-}
+  .divider-text {
+    position: relative;
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
 
-.divider-text span {
-  font-weight: bold;
-  padding: 7px;
-  font-size: 12px;
-  position: relative;
-  z-index: 2;
-}
+  .divider-text span {
+    font-weight: bold;
+    padding: 7px;
+    font-size: 12px;
+    position: relative;
+    z-index: 2;
+  }
 
-.divider-text:after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  border-bottom: 1px solid #ddd;
-  top: 55%;
-  left: 0;
-  z-index: 1;
-}
+  .divider-text:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    top: 55%;
+    left: 0;
+    z-index: 1;
+  }
 
-.btn-facebook {
-  background-color: #405D9D;
-  color: #fff;
-}
+  .btn-facebook {
+    background-color: #405D9D;
+    color: #fff;
+  }
 
-.btn-twitter {
-  background-color: #42AEEC;
-  color: #fff;
-}
+  .btn-twitter {
+    background-color: #42AEEC;
+    color: #fff;
+  }
 </style>
 
 <style type="text/css">
   * {
-  box-sizing:border-box;
-}
-textarea {
-  width:100%;
-  resize: vertical;
-  padding:15px;
-  border-radius:15px;
-  border:0;
-  box-shadow:4px 4px 10px rgba(0,0,0,0.06);
-  height:150px;
-}
-span.input-group-text {
-  border-radius: 0 !important;
-}
-input:not(.btn, .form-check-input, .image-file-input), select {
-  display:block;
-  width:100%;
-  border-radius: 0 !important;
-}
+    box-sizing:border-box;
+  }
+  textarea {
+    width:100%;
+    resize: vertical;
+    padding:15px;
+    border-radius:15px;
+    border:0;
+    box-shadow:4px 4px 10px rgba(0,0,0,0.06);
+    height:150px;
+  }
+  span.input-group-text {
+    border-radius: 0 !important;
+  }
+  input:not(.btn, .form-check-input, .image-file-input), select {
+    display:block;
+    width:100%;
+    border-radius: 0 !important;
+  }
+</style>
+<style type="text/css">
+  .edit-image-file {
+  position: absolute;
+  bottom: -34px;
+  width: 106px;
+  text-align: center;
+  }
+  .icon-delete {
+  background-image: url(https://kingsumo.b-cdn.net/img/icon-delete.svg);
+  }
+  .icon-delete,
+  .icon-edit {
+  height: 20px;
+  width: 23px;
+  background-position: 50%;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  bottom: -25px;
+  display: inline-block;
+  border: 0;
+  margin: 0 5px;
+  background-color: #fff;
+  }
+  .add-image-file {
+  margin-right: 15px;
+  width: 106px;
+  height: 99px;
+  background-position: 50%;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-image: url(/img/add-image.svg);
+  margin-bottom: 45px;
+  }
+  .image-file {
+  width: 106px;
+  height: 99px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: cover;
+  position: relative;
+  border-radius: 0.4rem;
+  display: inline-block;
+  margin-bottom: 55px;
+  margin-right: 15px;
+  }
+  .image-file-input {
+  width: 106px;
+  height: 99px;
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  }
+  input[type="file" i] {
+  appearance: none;
+  background-color: initial;
+  cursor: default;
+  align-items: baseline;
+  color: inherit;
+  text-overflow: ellipsis;
+  white-space: pre;
+  text-align: start !important;
+  padding: initial;
+  border: initial;
+  overflow: hidden !important;
+  }
+  .add-image-file p {
+  padding-top: 44px;
+  line-height: 1.3;
+  text-align: center;
+  color: #aeb8c4;
+  }
+  p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  }
+  .text-warning {
+  color: #f58b00 !important;
+  }
+  .add-image-file p {
+  padding-top: 44px;
+  line-height: 1.3;
+  text-align: center;
+  color: #aeb8c4;
+  }
 </style>

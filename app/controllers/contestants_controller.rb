@@ -60,7 +60,6 @@ class ContestantsController < ApplicationController
     respond_to do |format|
       if @contestant && @contestant.destroy
         format.html { redirect_back(fallback_location: root_path) }
-        format.js   {}
       end
     end
   end
@@ -69,8 +68,6 @@ class ContestantsController < ApplicationController
 
   def set_campaign
     @campaign = Campaign.friendly.find(params[:campaign_id])
-  rescue
-    redirect_to root_path, notice: "Something went wrong..."
   end
 
   def set_contestant

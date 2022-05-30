@@ -11,25 +11,27 @@
 <% end %>
 
 <div class="page-width page-width--narrow card mx-auto" style="max-width: 72.5rem; margin: 30px 0; box-shadow: 0 10px 50px 0 rgb(99 123 173 / 20%); border-radius: 20px;">
-  <div class="card-body" style="box-shadow: 0 10px 35px 0 rgb(99 123 173 / 20%); padding: 35px 44px; border-radius: 20px; background-color: #FFF; z-index: 9999;">
-    <div class="giv-entry-title pt-2 pt-sm-3 pb-0 pb-sm-2 mb-2">
-      <div class="mb-4">
-        <h1><strong>Congratulations!</strong></h1>
-        <p class="mb-4">Can you believe this??? Your giveaway is aliiiiive!<br />Now here comes the best part: promoting it!</p>
-      </div>
-      <div class="arrow-down-ribbon animate my-3"></div>
-      <div class="d-block text-center mb-5">
-        <!-- START OF VIRAL ACTIONS -->
-        <div id="entry-actions mb-3">
-          <div class="d-flex justify-content-center">
-            <div class="w-100 px-0 px-sm-4">
-              <div class="promo-act-list ">
+<div class="card-body" style="box-shadow: 0 10px 35px 0 rgb(99 123 173 / 20%); padding: 35px 44px; border-radius: 20px; background-color: #FFF; z-index: 9999;">
+  <div class="giv-entry-title pt-2 pt-sm-3 pb-0 pb-sm-2 mb-2">
+    <div class="mb-4">
+      <h1><strong>Congratulations!</strong></h1>
+      <p class="mb-4">
+        <i>Can you believe this? Your giveaway is alive!<br />Now here comes the best part: promoting it!</i>
+      </p>
+    </div>
+    <div class="arrow-down-ribbon animate my-3"></div>
+    <div class="d-block text-center mb-5">
+      <!-- START OF VIRAL ACTIONS -->
+      <div id="entry-actions mb-3">
+        <div class="d-flex justify-content-center">
+          <div class="w-100 px-0 px-sm-4">
+            <div class="promo-act-list ">
               <%= link_to "Copy Link", contestant_register_path(@campaign), class: "promo-act-btn promo-link", target: "_blank" %>
               <a class="promo-act-btn promo-twitter" href="https://twitter.com/share?url=<%= root_url.chomp("/") + contestant_register_path(@campaign) %>&amp;via=GemkhinGiveaway&amp;hashtags=giveaway,win&amp;text=<%= @campaign.title %>" target="_blank">Tweet about it</a>
               <a class="promo-act-btn promo-facebook" href="https://www.facebook.com/sharer/sharer.php?u=<%= root_url.chomp("/") + contestant_register_path(@campaign) %>&amp;title=<%= @campaign.title %>&amp;description=<%= @campaign.description %>" target="_blank">Share on Facebook</a>
               <button class="promo-act-btn promo-embed">Embed the giveaway widget on your website</button>
               <div>
-                <textarea class="border-0 rounded bg-light p-3 w-100 text-dark" rows="9" id="copy-promo-embed-code" readonly><div id="giveaway-embed" data-url="<%= root_url.chomp("/") + contestant_register_path(@campaign) %>"></div> <script type="text/javascript" src="<%= root_url %>javascript/embed.js"></script></textarea>
+                <textarea class="border-0 rounded bg-light p-3 w-100 text-dark" rows="9" id="copy-promo-embed-code" readonly><div id="giveaway-embed" data-url="<%= root_url.chomp("/") + contestant_register_path(@campaign) %>"></div><script type="text/javascript" src="<%= root_url %>javascript/embed.js"></script></textarea>
                 <style type="text/css">
                   textarea#copy-promo-embed-code {
                     overflow: hidden;
@@ -43,12 +45,12 @@
         </div>
         <style type="text/css">
           .promo-act-btn:first-child {
-            border-top: 2px solid #e9eff4;
+          border-top: 2px solid #e9eff4;
           }
         </style>
         <!-- END OF VIRAL ACTIONS -->
         <div class="row" style="margin-top: 35px;">
-          <div class="row justify-content-center">        
+          <div class="row justify-content-center">
             <div class="col-12 col-lg-8 my-4">
               <div class="text-center">
                 <p class="mb-2"><%= link_to "Go to your Giveaway page", contestant_register_path(@campaign), target: "_blank" %></p>
@@ -62,7 +64,6 @@
     </div>
   </div>
 </div>
-<!-- card.// -->
 
 <style>
 .giv-entry-title {
