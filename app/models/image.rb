@@ -5,6 +5,10 @@ class Image < ApplicationRecord
 
   after_create :set_image_job
 
+  scope :update_campaign_id, -> (ids, campaign_id) {
+    where(id: ids).update_all(campaign_id: campaign_id)
+  }
+
   private
 
   def set_image_job
