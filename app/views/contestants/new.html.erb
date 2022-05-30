@@ -38,7 +38,7 @@
         <div>TIME LEFT</div>
       </div>
       <div class="d-flex text-center align-items-center basic-info">
-        <div class="col-6 col-sm-2 col-md-3 h6 order-2 order-sm-1 basic-b">VALUE: $<%= "%.2f" % @campaign.winner_prize_value.round(2) %></div>
+        <div class="col-6 col-sm-2 col-md-3 h6 order-2 order-sm-1 basic-b">Value: $<%= "%.2f" % @campaign.winner_prize_value.round(2) %></div>
         <div class="col-12 col-sm-7 col-md-6 order-1 order-sm-2 hr-b-small">
           <div class="time-left d-flex justify-content-center" id="countdown">
             <div class="time-unity">
@@ -58,7 +58,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 col-sm-2 col-md-3 h6 order-3 basic-b">WINNERS: <%= @campaign.number_of_winners %></div>
+        <div class="col-6 col-sm-2 col-md-3 h6 order-3 basic-b">Winner(s): <%= @campaign.number_of_winners %></div>
       </div>
     <% end %>  
     <% if @campaign.campaign_time_out? %>
@@ -98,7 +98,7 @@
           </div>
           <p class="text-muted mt-3" style="text-align: center;">
             <label class="form-check-label">
-            <input class="form-check-input mr-2" type="checkbox"required=""> <small>I consent to getting sale, promotion, or marketing email*</small>
+            <input class="form-check-input mr-2" data-contestants-target="gdpr" type="checkbox" required=""> <small>I consent to getting sale, promotion, or marketing email*</small>
             </label> 
           </p>
         <% end %>

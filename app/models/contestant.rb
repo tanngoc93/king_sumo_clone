@@ -22,6 +22,10 @@ class Contestant < ApplicationRecord
   after_create   :send_confirmation_email
   before_destroy :destroy_bonus_entry_managements, :destroy_share_action_managements
 
+  def confirm(confirmed_ip)
+    update(confirmed: true, confirmed_at: Time.now.utc, confirmed_ip: confirmed_ip)
+  end
+
   private
 
   def send_confirmation_email

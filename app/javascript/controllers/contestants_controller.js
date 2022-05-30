@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "email", "form" ]
+  static targets = [ "gdpr", "email", "form" ]
 
   connect() {
     const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -32,7 +32,11 @@ export default class extends Controller {
   ajaxSubmit(event) {
     event.preventDefault()
 
+    const gdpr = this.gdprTarget.checked
     const email = this.emailTarget.value
+
+    if (!gdpr)
+      return alert("Please accept advertising terms!")
 
     $.ajax({
       method: "POST",

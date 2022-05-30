@@ -2,10 +2,10 @@ class ConfirmationsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ edit ]
   before_action :set_contestant, only: %i[ edit ]
 
-  def edit   
-    unless @contestant.confirmed?
-      @contestant.update(confirmed: true, confirmed_at: DateTime.now, confirmed_ip: confirmed_ip)
-    end
+  def edit
+    redirect_to root_path, notice: "Something went wrong..." unless @contestant
+
+    @contestant.confirm(confirmed_ip) unless @contestant.confirmed?
 
     redirect_to contestant_registered_path(@contestant.campaign.slug, @contestant.secret_code)
   end
@@ -14,8 +14,6 @@ class ConfirmationsController < ApplicationController
 
   def set_contestant
     @contestant = Contestant.find_by(confirmation_token: params[:confirmation_token])
-  rescue
-    redirect_to root_path, notice: "Something went wrong..."
   end
 
   def confirmed_ip

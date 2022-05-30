@@ -83,7 +83,7 @@
                     <div>
                       <div class="promo-act-line">
                         <a class="promo-act-btn promo-facebook <%= @contestant.share_action.pluck(:name).include?(action.name) ? "promo-check" : nil %>" href="<%= redirection_path(@contestant.secret_code, { event: action.name, action_url: action.action_url }) %>" title="" target="_blank">
-                          <div>Share <%= action.name.eql?("email") ? "via" : "on" %> <%= action.name.humanize %></div>
+                          <div>Share via <%= action.name.humanize %></div>
                         </a>
                         <div class="tag-entries">
                           +<%= action.action_points %>

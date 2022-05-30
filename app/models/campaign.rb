@@ -20,8 +20,8 @@ class Campaign < ApplicationRecord
 
   before_create :slug_override
 
-  enum status: [:running, :stoped, :archived]
-  enum currency_unit: [:usd, :euro]
+  enum status: %i[ running stoped archived ]
+  enum currency_unit: %i[ usd euro ]
 
   def to_csv
     attributes = %w{id full_name email registered_ip confirmed_ip created_at confirmed total_points total_referrals}
@@ -56,10 +56,10 @@ class Campaign < ApplicationRecord
   end
  
   def slug_override
-    self.slug = "#{self.slug}-#{generate_token}"
+    self.slug = "#{self.slug}-#{generate_slug_token}"
   end
 
-  def generate_token
+  def generate_slug_token
     loop do
       token = SecureRandom.hex(1)
       break token unless self.class.exists?(slug: "#{self.slug}-#{token}")
