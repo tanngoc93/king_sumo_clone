@@ -14,10 +14,10 @@ export default class extends Controller {
       toolbar: [ "heading", "|", "bold", "italic", "link", "bulletedList", "numberedList", "blockQuote", "undo", "redo" ]
     })
     .then( editor => {
-        window.editor = editor;
+        window.editor = editor
     } )
     .catch( error => {
-      console.error( error );
-    });
+      console.error( error )
+    })
   }
 }

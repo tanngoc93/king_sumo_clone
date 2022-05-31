@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_27_142122) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_31_025836) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -113,6 +113,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_27_142122) do
     t.index ["secret_code"], name: "index_contestants_on_secret_code", unique: true
   end
 
+  create_table "downloads", force: :cascade do |t|
+    t.integer "status"
+    t.string "file_name"
+    t.string "file_type"
+    t.bigint "user_id", null: false
+    t.bigint "campaign_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id"], name: "index_downloads_on_campaign_id"
+    t.index ["user_id"], name: "index_downloads_on_user_id"
+  end
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
@@ -184,7 +196,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_27_142122) do
     t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "shopify_domain"
     t.integer "user_type", default: 0, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -198,6 +209,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_27_142122) do
   add_foreign_key "bonus_entry_managements", "contestants"
   add_foreign_key "campaigns", "users"
   add_foreign_key "contestants", "campaigns"
+  add_foreign_key "downloads", "campaigns"
+  add_foreign_key "downloads", "users"
   add_foreign_key "share_action_managements", "contestants"
   add_foreign_key "share_action_managements", "share_actions"
   add_foreign_key "share_actions", "campaigns"

@@ -4,6 +4,7 @@ export default class extends Controller {
   static targets = [ "gdpr", "email", "form" ]
 
   connect() {
+
     const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     $("form input[name='contestant[email]']").on("change", function (event) {
@@ -56,7 +57,7 @@ export default class extends Controller {
         window.location.replace( data["redirect_to"] )
     })
     .fail(function() {
-      alert("Something went wrong...");
+      alert("Something went wrong...")
     })
     .always(function () {
       // always do something

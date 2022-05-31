@@ -5,14 +5,14 @@ export default class extends Controller {
 
     $(".add-image-file").on("change", function (e) {
 
-      let file = $(this).find("input.image-file-input")[0].files[0];
+      let file = $(this).find("input.image-file-input")[0].files[0]
 
-      let fd = new FormData();
+      let fd = new FormData()
           fd.append('data', file)
 
       upload(fd)
 
-    });
+    })
 
     const upload = (data) => {
       $.ajax({
@@ -47,8 +47,11 @@ export default class extends Controller {
       url: `/images/${id}`
     })
     .done(function( msg ) {
-      $(`.image-file-${id}`).remove();
-    });
+      $(`.image-file-${id}`).remove()
+    })
+    .always(function () {
+      // always do something
+    })
   }
 
 }

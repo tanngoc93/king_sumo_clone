@@ -8,7 +8,7 @@
     <p class="divider-text">
       <span class="bg-light"> <!-- OR --> </span>
     </p>
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+    <%= form_for(resource, as: resource_name, data: { turbo: false }, url: registration_path(resource_name), html: { method: :put }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
 
       <div class="mb-3">
@@ -43,12 +43,6 @@
           <%= f.submit "Update", class: "btn btn-warning" %>
         </div>
       <% end %>
-    <% end %>
-
-    <% unless current_user.user_type.eql?("shopify") %>
-      <div class="mb-3 actions">
-        <%= button_to "Unhappy? Cancel My Account!", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-sm btn-danger" %>
-      </div>
     <% end %>
     
     <div class="mb-3 actions">
