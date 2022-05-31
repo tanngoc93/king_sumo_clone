@@ -7,7 +7,6 @@ class Campaign < ApplicationRecord
   has_many :contestants, dependent: :destroy
   has_many :share_actions, dependent: :destroy
   has_many :bonus_entries, dependent: :destroy
-  has_many :downloads, dependent: :destroy
 
   belongs_to :user
 

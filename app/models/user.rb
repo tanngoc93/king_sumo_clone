@@ -7,7 +7,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable, :trackable
 
   has_many :campaigns, dependent: :destroy
-  has_many :downloads, dependent: :destroy
 
   enum user_type: %i[normal shopify]
 
