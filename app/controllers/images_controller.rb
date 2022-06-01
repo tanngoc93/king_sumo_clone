@@ -1,15 +1,14 @@
 class ImagesController < ApplicationController
-  protect_from_forgery with: :null_session
 
   def create
     image = Image.create!(image_params)
 
     render json: {
-      upload_preview: render_to_string(
+      image_preview: render_to_string(
         locals: {
           image: image
         },
-        partial: "campaigns/upload_preview", 
+        partial: "campaigns/image_preview",
         formats: :html,
         layout: false
       )

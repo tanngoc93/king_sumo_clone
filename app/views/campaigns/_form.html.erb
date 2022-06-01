@@ -25,7 +25,7 @@
       <%= form.label :starts_at, class: "form-label", style: "font-weight: bold;" %>
       <%= form.datetime_field :starts_at,
         value: @campaign.starts_at ?
-          Time.parse(@campaign.starts_at).strftime("%Y-%m-%dT%H:%M") : "",
+          Time.parse(@campaign.starts_at).strftime("%Y-%m-%dT%H:%M") : nil,
         class: "form-control",
         required: true
       %>
@@ -34,7 +34,7 @@
       <%= form.label :ends_at, class: "form-label", style: "font-weight: bold;" %>
       <%= form.datetime_field :ends_at,
         value: @campaign.ends_at ?
-          Time.parse(@campaign.ends_at).strftime("%Y-%m-%dT%H:%M") : "",
+          Time.parse(@campaign.ends_at).strftime("%Y-%m-%dT%H:%M") : nil,
         class: "form-control",
         required: true
       %>
@@ -45,7 +45,7 @@
       <%= form.label :awarded_at, class: "form-label", style: "font-weight: bold;" %>
       <%= form.datetime_field :awarded_at,
         value: @campaign.awarded_at ?
-          Time.parse(@campaign.awarded_at).strftime("%Y-%m-%dT%H:%M") : "",
+          Time.parse(@campaign.awarded_at).strftime("%Y-%m-%dT%H:%M") : nil,
         class: "form-control",
         required: true
       %>
@@ -97,9 +97,9 @@
   <div id="add-images" data-controller="images">
     <div class="d-flex flex-wrap mb-1">
       <% if @campaign && @campaign.images.any? %>
-      <% @campaign.images.each do |image| %>
-      <%= render partial: "campaigns/upload_preview", locals: { image: image } %>
-      <% end %>
+        <% @campaign.images.each do |image| %>
+          <%= render partial: "campaigns/image_preview", locals: { image: image } %>
+        <% end %>
       <% end %>
       <div class="add-image-file image-file" style="background-image: url(//kingsumo.com/img/add-image.svg);">
         <input type="file" accept=".jpg,.jpeg,.png" class="image-file-input" title="Click to edit" style="cursor: pointer;" />
@@ -183,14 +183,9 @@
     line-height: 70px;
     font-size: 1.3rem;
   }
-</style>
-
-<style>
   .ck-editor__editable_inline {
     min-height: 400px;
   }
-</style>
-<style type="text/css">
   .imagePreview {
     width: 100%;
     height: 150px;
@@ -241,9 +236,6 @@
     font-size: 15px;
     padding: 0;
   }
-</style>
-
-<style type="text/css">
   .field_with_errors {
     width: 100%;
   }
@@ -286,9 +278,6 @@
     background-color: #42AEEC;
     color: #fff;
   }
-</style>
-
-<style type="text/css">
   * {
     box-sizing:border-box;
   }
@@ -309,8 +298,6 @@
     width:100%;
     border-radius: 0 !important;
   }
-</style>
-<style type="text/css">
   .edit-image-file {
   position: absolute;
   bottom: -34px;
@@ -318,7 +305,7 @@
   text-align: center;
   }
   .icon-delete {
-  background-image: url(https://kingsumo.b-cdn.net/img/icon-delete.svg);
+  background-image: url(//kingsumo.b-cdn.net/img/icon-delete.svg);
   }
   .icon-delete,
   .icon-edit {

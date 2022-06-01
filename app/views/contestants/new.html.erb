@@ -38,24 +38,24 @@
       <div class="hr-title h6">
         <div>TIME LEFT</div>
       </div>
-      <div class="d-flex text-center align-items-center basic-info">
+      <div data-controller="countdown" class="en d-flex text-center align-items-center basic-info">
         <div class="col-6 col-sm-2 col-md-3 h6 order-2 order-sm-1 basic-b">VALUE: $<%= "%.2f" % @campaign.winner_prize_value.round(2) %></div>
         <div class="col-12 col-sm-7 col-md-6 order-1 order-sm-2 hr-b-small">
-          <div class="time-left d-flex justify-content-center" id="countdown">
+          <div data-ends-at="<%= @campaign.ends_at.in_time_zone %>" id="countdown" class="countdown time-left d-flex justify-content-center">
             <div class="time-unity">
-              <span id="countdown-days" style="font-weight: bold;">*</span><br><span class="label">DAYS</span>
+              <span class="days" style="font-weight: bold;">*</span><br><span class="label">DAYS</span>
             </div>
             <div>:</div>
             <div class="time-unity">
-              <span id="countdown-hours" style="font-weight: bold;">*</span><br><span class="label">HOURS</span>
+              <span class="hours" style="font-weight: bold;">*</span><br><span class="label">HOURS</span>
             </div>
             <div>:</div>
             <div class="time-unity">
-              <span id="countdown-minutes" style="font-weight: bold;">*</span><br><span class="label">MIN</span>
+              <span class="minutes" style="font-weight: bold;">*</span><br><span class="label">MIN</span>
             </div>
             <div>:</div>
             <div class="time-unity">
-              <span id="countdown-seconds" style="font-weight: bold;">*</span><br><span class="label">SEC</span>
+              <span class="seconds" style="font-weight: bold;">*</span><br><span class="label">SEC</span>
             </div>
           </div>
         </div>
@@ -71,21 +71,21 @@
           model: @contestant,
           data: {
             "type": "html",
-            "controller": "contestants",
-            "target": "contestants.form",
-            "contestants-url": contestant_register_path(@campaign)
+            "controller": "contestant",
+            "target": "contestant.form",
+            "contestant-url": contestant_register_path(@campaign)
           },
           class: "needs-validation"
         ) do |form| %>
 
           <div class="">
             <div class="input-group has-validation">
-              <%= form.text_field :email, data: { "contestants-target": "email" }, class: "form-control", placeholder: "Enter your email", required: true %>
+              <%= form.text_field :email, data: { "contestant-target": "email" }, class: "form-control", placeholder: "Enter your email", required: true %>
               <%=
                 form.submit "ENTER",
                 data: {
                   remote: true,
-                  action: "click->contestants#ajaxSubmit"
+                  action: "click->contestant#ajaxSubmit"
                 },
                 disabled: true,
                 class: "btn btn-success"
@@ -95,7 +95,7 @@
           </div>
           <p class="text-muted mt-2" style="text-align: center;">
             <label class="form-check-label">
-              <input class="form-check-input mr-2" data-contestants-target="gdpr" type="checkbox" required=""> <small><i>I consent to getting sale, promotion, or marketing email(*)</i></small>
+              <input class="form-check-input mr-2" data-contestant-target="gdpr" type="checkbox" required=""> <small><i>I consent to getting sale, promotion, or marketing email(*)</i></small>
             </label> 
           </p>
         <% end %>
@@ -393,43 +393,3 @@
 </style>
 
 <script src="<%= root_url %>javascript/iframeResizer.contentWindow.min.js"></script>
-
-<script type="text/javascript">
-
-  // Set the date we're counting down to
-  var countDownTime = new Date("<%= @campaign.ends_at %>").getTime();
-  
-  // Update the count down every 1 second
-  var x = setInterval(function() {
-  
-    // Get today's date and time
-    var now = new Date().getTime();
-  
-    // Find the distance between now and the count down date
-    var distance = countDownTime - now;
-  
-    // Time calculations for days, hours, minutes and seconds
-    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    document.getElementById("countdown-days").innerHTML = days
-    document.getElementById("countdown-hours").innerHTML = hours
-    document.getElementById("countdown-minutes").innerHTML = minutes
-    document.getElementById("countdown-seconds").innerHTML = seconds
-
-    if (distance < 0) {
-
-      clearInterval(x);
-
-      document.getElementById("countdown-days").innerHTML = "0"
-      document.getElementById("countdown-hours").innerHTML = "0"
-      document.getElementById("countdown-minutes").innerHTML = "0"
-      document.getElementById("countdown-seconds").innerHTML = "0"
-
-    }
-
-  }, 1000);
-
-</script>

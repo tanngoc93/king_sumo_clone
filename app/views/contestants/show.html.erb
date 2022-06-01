@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @campaign.title %> - <%= @campaign.offered_by_name %>
+  <%= @campaign.offered_by_name %> | <%= @campaign.title %>
 <% end %>
 
 <% content_for :facebook_properties do %>
@@ -46,24 +46,24 @@
         <div class="hr-title h6">
           <div>TIME LEFT</div>
         </div>
-        <div class="d-flex text-center align-items-center basic-info">
+        <div data-controller="countdown" class="d-flex text-center align-items-center basic-info">
           <div class="col-6 col-sm-2 col-md-3 h6 order-2 order-sm-1 basic-b">VALUE: $<%= "%.2f" % @campaign.winner_prize_value.round(2) %></div>
           <div class="col-12 col-sm-7 col-md-6 order-1 order-sm-2 hr-b-small">
-            <div class="time-left d-flex justify-content-center" id="countdown">
+            <div data-ends-at="<%= @campaign.ends_at %>" id="countdown" class="countdown time-left d-flex justify-content-center" id="countdown">
               <div class="time-unity">
-                <span id="countdown-days" style="font-weight: bold;">*</span><br><span class="label">DAYS</span>
+                <span class="days" style="font-weight: bold;">*</span><br><span class="label">DAYS</span>
               </div>
               <div>:</div>
               <div class="time-unity">
-                <span id="countdown-hours" style="font-weight: bold;">*</span><br><span class="label">HOURS</span>
+                <span class="hours" style="font-weight: bold;">*</span><br><span class="label">HOURS</span>
               </div>
               <div>:</div>
               <div class="time-unity">
-                <span id="countdown-minutes" style="font-weight: bold;">*</span><br><span class="label">MIN</span>
+                <span class="minutes" style="font-weight: bold;">*</span><br><span class="label">MIN</span>
               </div>
               <div>:</div>
               <div class="time-unity">
-                <span id="countdown-seconds" style="font-weight: bold;">*</span><br><span class="label">SEC</span>
+                <span class="seconds" style="font-weight: bold;">*</span><br><span class="label">SEC</span>
               </div>
             </div>
           </div>
@@ -75,15 +75,20 @@
         <div id="entry-actions">
           <div class="d-flex justify-content-center">
             <div class="w-100 px-0 px-sm-4">
-              <h2 class="h3 mb-4"><strong>Get even more entries</strong> by completing these actions:</h2>
-              <div class="promo-act-list">
+              <h2 class="h3 mb-4"><i>Get even more entries by completing these actions:</i></h2>
+              <div data-controller="contestant" class="promo-act-list">
                 <% @campaign.share_actions.each do |action| %>
-                  <% if action.checked && action.name != "messenger" %>
+                  <% if action.checked %>
                     <div>
                       <div class="promo-act-line">
-                        <a class="promo-act-btn promo-facebook <%= @contestant.share_action.pluck(:name).include?(action.name) ? "promo-check" : nil %>" href="<%= redirection_path(@contestant.secret_code, { event: action.name, action_url: action.action_url }) %>" target="_blank">
-                          <div>Share via <%= action.name.humanize %></div>
-                        </a>
+                        <%= link_to "Share #{ action.name.eql?("email") ? "via" : "on" } #{ action.name.humanize }", 
+                          redirection_path(@contestant.secret_code, { event: action.name, action_url: action.action_url }),
+                          class: "promo-act-btn promo-facebook #{ @contestant.share_action.pluck(:name).include?(action.name) ? 'promo-check' : nil }",
+                          data: {
+                            action: "click->contestant#share"
+                          },
+                          target: "_blank"
+                        %>
                         <div class="tag-entries">
                           +<%= action.action_points %>
                           <div>+<%= action.action_points %> PER <br>REFERRAL</div>
@@ -95,9 +100,14 @@
                 <% @campaign.bonus_entries.each do |bonus| %>
                   <div>
                     <div class="promo-act-line">
-                      <a class="promo-act-btn promo-facebook <%= @contestant.bonus_entry.pluck(:name).include?(bonus.name) ? "promo-check" : nil %>" href="<%= redirection_path(@contestant.secret_code, { event: bonus.name, action_url: bonus.action_url }) %>" target="_blank">
-                        <div><%= bonus.action_text %></div>
-                      </a>
+                      <%= link_to bonus.action_text,
+                        redirection_path(@contestant.secret_code, { event: bonus.name, action_url: bonus.action_url }),
+                        class: "promo-act-btn promo-facebook #{ @contestant.bonus_entry.pluck(:name).include?(bonus.name) ? "promo-check" : nil }",
+                        data: {
+                          action: "click->contestant#share"
+                        },
+                        target: "_blank"
+                      %>
                       <div class="tag-entries">+<%= bonus.action_points %></div>
                     </div>
                   </div>
@@ -144,6 +154,8 @@
     </div>
   </div>
 </div>
+
+<script src="<%= root_url %>javascript/iframeResizer.contentWindow.min.js"></script>
 
 <style>
 .giv-entry-title {
@@ -255,9 +267,7 @@
   -webkit-transition: margin-left .2s ease-in-out, background-color .2s ease-in-out, padding-left .2s ease-in-out;
   transition: margin-left .2s ease-in-out, background-color .2s ease-in-out, padding-left .2s ease-in-out;
 }
-</style>
 
-<style type="text/css">
 @media (min-width: 960px) {
   .card {
     max-width: 50% !important;
@@ -489,56 +499,3 @@ p {
   padding: 0 10px;
 }
 </style>
-
-<script src="<%= root_url %>javascript/iframeResizer.contentWindow.min.js"></script>
-
-<% if @contestant.confirmed_at.present? %>
-  <script type="text/javascript">
-
-    // Set the date we're counting down to
-    var countDownTime = new Date("<%= @campaign.ends_at %>").getTime();
-    
-    // Update the count down every 1 second
-    var x = setInterval(function() {
-    
-      // Get today's date and time
-      var now = new Date().getTime();
-    
-      // Find the distance between now and the count down date
-      var distance = countDownTime - now;
-    
-      // Time calculations for days, hours, minutes and seconds
-      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      document.getElementById("countdown-days").innerHTML = days
-      document.getElementById("countdown-hours").innerHTML = hours
-      document.getElementById("countdown-minutes").innerHTML = minutes
-      document.getElementById("countdown-seconds").innerHTML = seconds
-
-      // Display the result in the element with id="demo"
-      // document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-      // + minutes + "m " + seconds + "s ";
-
-      // If the count down is finished, write some text
-      if (distance < 0) {
-
-        clearInterval(x);
-
-        document.getElementById("countdown-days").innerHTML = "0"
-        document.getElementById("countdown-hours").innerHTML = "0"
-        document.getElementById("countdown-minutes").innerHTML = "0"
-        document.getElementById("countdown-seconds").innerHTML = "0"
-
-      }
-
-    }, 1000);
-
-    // $(".promo-act-btn").click(function() {
-    //   $(this).addClass("promo-check");
-    // })
-
-  </script>
-<% end %>

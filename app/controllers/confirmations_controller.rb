@@ -5,7 +5,7 @@ class ConfirmationsController < ApplicationController
   def edit
     redirect_to root_path, notice: "Something went wrong..." unless @contestant
 
-    @contestant.confirm(confirmed_ip) unless @contestant.confirmed?
+    @contestant.confirm( confirmed_ip ) unless @contestant.confirmed?
 
     redirect_to contestant_registered_path(@contestant.campaign.slug, @contestant.secret_code)
   end

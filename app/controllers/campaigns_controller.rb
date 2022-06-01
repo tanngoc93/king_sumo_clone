@@ -29,7 +29,11 @@ class CampaignsController < ApplicationController
     if @campaign.save
 
       image_ids = params[:prize_images]
-      Image.update_campaign_id(image_ids.map(&:to_i), @campaign.id) if image_ids && image_ids.any?
+
+      if image_ids && image_ids.any?
+        Image.update_campaign_id(image_ids.map(&:to_i), @campaign.id)
+      end
+
       redirect_to campaigns_path, notice: "Campaign was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -42,7 +46,11 @@ class CampaignsController < ApplicationController
     if @campaign && @campaign.update(campaign_params)
 
       image_ids = params[:prize_images]
-      Image.update_campaign_id(image_ids.map(&:to_i), @campaign.id) if image_ids && image_ids.any?
+
+      if image_ids && image_ids.any?
+        Image.update_campaign_id(image_ids.map(&:to_i), @campaign.id)
+      end
+
       redirect_to campaigns_path, notice: "Campaign was successfully updated."
     else
       render :new, status: :unprocessable_entity

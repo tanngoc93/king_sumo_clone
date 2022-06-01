@@ -29,7 +29,10 @@ export default class extends Controller {
         }
       })
       .done(function (data) {
-        $("div.d-flex.flex-wrap").prepend(data['upload_preview'])
+        $("div.d-flex.flex-wrap").prepend( data['image_preview'] )
+      })
+      .fail(function() {
+        alert("Something went wrong...")
       })
       .always(function () {
         // always do something
@@ -40,7 +43,7 @@ export default class extends Controller {
   remove(event) {
     event.preventDefault()
 
-    const id = event.target.dataset.id
+    const { id } = event.target.dataset
 
     $.ajax({
       method: "DELETE",

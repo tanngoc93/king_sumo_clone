@@ -30,6 +30,15 @@ export default class extends Controller {
     })
   }
 
+  share(event) {
+
+    const isChecked = $(event.target).hasClass("promo-check")
+
+    if ( !isChecked ) {
+      $(event.target).addClass("promo-check")
+    }
+  }
+
   ajaxSubmit(event) {
     event.preventDefault()
 
@@ -53,8 +62,12 @@ export default class extends Controller {
       }
     })
     .done(function(data) {
-      if ( data["redirect_to"] )
+
+      document.cookie = `contestant_secret_code=${ data["contestant"]["secret_code"] }`;
+
+      if ( data["redirect_to"] ) {
         window.location.replace( data["redirect_to"] )
+      }
     })
     .fail(function() {
       alert("Something went wrong...")

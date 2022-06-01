@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :null_session
 
   before_action :authenticate_user!, :set_referral_cookie, :set_host
 
@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
     if params[:ref]
       cookies[:referral_code] = {
         value: params[:ref],
-        expires: 30.days.from_now,
+        expires: 30.days.from_now
       }
     end
   end
