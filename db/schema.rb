@@ -65,10 +65,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_27_142122) do
   create_table "campaigns", force: :cascade do |t|
     t.string "title"
     t.text "description"
-    t.datetime "starts_at", precision: nil
-    t.datetime "ends_at", precision: nil
-    t.datetime "awarded_at", precision: nil
-    t.string "timezone"
+    t.string "starts_at"
+    t.string "ends_at"
+    t.string "awarded_at"
+    t.string "time_zone"
     t.boolean "gdpr"
     t.string "offered_by_name"
     t.string "offered_by_url"

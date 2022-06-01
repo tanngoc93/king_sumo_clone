@@ -23,21 +23,37 @@
   <div class="row mb-3">
     <div class="col">
       <%= form.label :starts_at, class: "form-label", style: "font-weight: bold;" %>
-      <%= form.datetime_field :starts_at, required: true, value: Time.now.strftime("%Y-%m-%dT%H:%M"), class: "form-control" %>
+      <%= form.datetime_field :starts_at,
+        value: @campaign.starts_at ?
+          Time.parse(@campaign.starts_at).strftime("%Y-%m-%dT%H:%M") : "",
+        class: "form-control",
+        required: true
+      %>
     </div>
     <div class="col">
       <%= form.label :ends_at, class: "form-label", style: "font-weight: bold;" %>
-      <%= form.datetime_field :ends_at, required: true, value: (Time.now + 7.days).strftime("%Y-%m-%dT%H:%M"), class: "form-control" %>
+      <%= form.datetime_field :ends_at,
+        value: @campaign.ends_at ?
+          Time.parse(@campaign.ends_at).strftime("%Y-%m-%dT%H:%M") : "",
+        class: "form-control",
+        required: true
+      %>
     </div>
   </div>
   <div class="row mb-3">
     <div class="col">
       <%= form.label :awarded_at, class: "form-label", style: "font-weight: bold;" %>
-      <%= form.datetime_field :awarded_at, required: true, value: (Time.now + 8.days).strftime("%Y-%m-%dT%H:%M"), class: "form-control" %>
+      <%= form.datetime_field :awarded_at,
+        value: @campaign.awarded_at ?
+          Time.parse(@campaign.awarded_at).strftime("%Y-%m-%dT%H:%M") : "",
+        class: "form-control",
+        required: true
+      %>
     </div>
+
     <div class="col">
-      <%= form.label :timezone, class: "form-label", style: "font-weight: bold;" %>
-      <%= form.select :timezone, options_for_select(@time_zones.map { |t| [t['value'], t['abbr']] }.sort, @campaign.timezone), {}, { class: "form-control", disabled: false } %>
+      <%= form.label :time_zone, class: "form-label", style: "font-weight: bold;" %>
+      <%= form.select :time_zone, options_for_select(@time_zones, @campaign.time_zone), {}, { class: "form-control", disabled: false } %>
     </div>
   </div>
   <br />
@@ -46,7 +62,7 @@
   </p>
   <div class="row mb-3">
     <div class="col">
-      <label class="form-label" for="campaign_offered_by_name" style="font-weight: bold;">Business's name</label>
+      <label class="form-label" for="campaign_offered_by_name" style="font-weight: bold;">Business name</label>
       <%= form.text_field :offered_by_name, required: true, placeholder: "Microsoft Corporation", class: "form-control" %>
     </div>
     <div class="col">

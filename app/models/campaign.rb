@@ -18,9 +18,13 @@ class Campaign < ApplicationRecord
 
   validates :title, presence: true
 
-  before_create :slug_override
+  before_create :set_times_and_status, :set_url
+  before_update :set_times_and_status
 
-  enum status: %i[ running stoped archived ]
+  after_create :set_campaign_status_job
+  after_update :set_campaign_status_job
+
+  enum status: %i[ upcoming running expired archived ]
   enum currency_unit: %i[ usd euro ]
 
   def to_csv
@@ -37,11 +41,51 @@ class Campaign < ApplicationRecord
     end
   end
 
-  def campaign_time_out?
-    DateTime.now.after?(self.awarded_at)
+  private
+
+  def set_campaign_status_job
+
+    queue = Sidekiq::ScheduledSet.new
+
+    queue.select do |job|
+      job.klass == "SetCampaignStatusJob" && job.args[0] == id
+    end.each(&:delete)
+
+    now = Time.now.in_time_zone(time_zone)
+
+    if now.before?( starts_at ) && self.upcoming?
+      SetCampaignStatusJob.perform_at( Time.parse(starts_at).utc, id )
+    end
+
+    if now.before?( ends_at ) && self.running?
+      SetCampaignStatusJob.perform_at( Time.parse(ends_at).utc, id )
+    end
   end
 
-  private
+  def set_times_and_status
+
+    return unless ( starts_at_changed? || ends_at_changed? || awarded_at_changed? )
+
+    now = Time.now.in_time_zone(time_zone)
+
+    self.starts_at  = starts_at.in_time_zone(time_zone)
+    self.ends_at    = ends_at.in_time_zone(time_zone)
+    self.awarded_at = awarded_at.in_time_zone(time_zone)
+
+    return if self.archived?
+
+    if now.before?( starts_at )
+      self.status = 0
+    end
+
+    if now.between?( starts_at, ends_at )
+      self.status = 1
+    end
+
+    if now.after?( ends_at )
+      self.status = 2
+    end
+  end
 
   def share_actions_override
     self.share_actions.each do |action|
@@ -55,11 +99,11 @@ class Campaign < ApplicationRecord
     end
   end
  
-  def slug_override
-    self.slug = "#{self.slug}-#{generate_slug_token}"
+  def set_url
+    self.slug = "#{self.slug}-#{generate_token}"
   end
 
-  def generate_slug_token
+  def generate_token
     loop do
       token = SecureRandom.hex(1)
       break token unless self.class.exists?(slug: "#{self.slug}-#{token}")

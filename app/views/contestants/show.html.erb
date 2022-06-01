@@ -3,42 +3,42 @@
 <% end %>
 
 <% content_for :facebook_properties do %>
-  <meta property="og:url"           content="<%= root_url.chomp("/") + contestant_register_path(@campaign) %>" />
-  <meta property="og:type"          content="website" />
-  <meta property="og:title"         content="<%= @campaign.title %>" />
-  <meta property="og:description"   content="<%= @campaign.description %>" />
-  <meta property="og:image"         content="" />
+  <meta property="og:url"         content="<%= root_url.chomp("/") + contestant_register_path(@campaign) %>" />
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="<%= @campaign.title %>" />
+  <meta property="og:description" content="<%= @campaign.description %>" />
 <% end %>
 
 <div class="page-width page-width--narrow card mx-auto" style="max-width: 72.5rem; margin: 30px 0; box-shadow: 0 10px 25px 0 rgb(99 123 173 / 20%); border-radius: 20px;">
   <% if @campaign.images.any? %>
-    <div id="carouselGiveaway" class="carousel slide" data-bs-ride="carousel" style="height: 350px">
+    <div data-controller="carousel" data-bs-ride="carousel" id="giveawayCarousel" class="carousel slide" style="height: 350px">
       <div class="carousel-inner">
         <% @campaign.images.each_with_index do |image, index| %>
-          <div class="carousel-item <%= index === 0 ? "active" : nil %>">
-            <div class="d-block w-100" style="z-index: 99; height: 330px; border-radius: 20px 20px 0 0; background-image: url(<%= url_for(image.data) %>); background-repeat: no-repeat; background-position: bottom center; background-size: cover;"></div>
+          <div class="carousel-item <%= index.eql?(0) ? "active" : nil %>">
+            <div class="d-block w-100" style="z-index: 99; height: 335px; border-radius: 20px 20px 0 0; background-image: url(<%= url_for(image.data) %>); background-repeat: no-repeat; background-position: center; background-size: cover;">
+            </div>
           </div>
         <% end %>
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselGiveaway" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" data-bs-target="#giveawayCarousel" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselGiveaway" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" data-bs-target="#giveawayCarousel" data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
       </button>
     </div>
-  <% end %>  
+  <% end %>
   <div class="card-body" style="box-shadow: 0 10px 35px 0 rgb(99 123 173 / 20%); margin: <%= @campaign.images.any? ? "-45px 0 0 0" : "0" %>; padding: 35px 44px; border-radius: 20px; background-color: #FFF; z-index: 9999;">
     <div class="giv-entry-title pt-2 pt-sm-3 pb-0 pb-sm-2 mb-2">
       <div class="mb-3">
-        <h1 class="display-4">
+        <h1 class="display-4 pb-2">
           <strong>Congratulations!</strong>
           <span class="text-thin">You're in!</span>                
         </h1>
       </div>
-      <% if @contestant.confirmed_at.nil? %>
+      <% unless @contestant.confirmed_at.present? %>
         <div class="mb-3 text-center alert alert-warning d-inline-block m-auto" role="alert">
           Check your inbox and confirm your email to be eligible to win!
         </div>
@@ -47,7 +47,7 @@
           <div>TIME LEFT</div>
         </div>
         <div class="d-flex text-center align-items-center basic-info">
-          <div class="col-6 col-sm-2 col-md-3 h6 order-2 order-sm-1 basic-b">VALUE: $<%= @campaign.winner_prize_value %></div>
+          <div class="col-6 col-sm-2 col-md-3 h6 order-2 order-sm-1 basic-b">VALUE: $<%= "%.2f" % @campaign.winner_prize_value.round(2) %></div>
           <div class="col-12 col-sm-7 col-md-6 order-1 order-sm-2 hr-b-small">
             <div class="time-left d-flex justify-content-center" id="countdown">
               <div class="time-unity">
@@ -67,12 +67,11 @@
               </div>
             </div>
           </div>
-          <div class="col-6 col-sm-2 col-md-3 h6 order-3 basic-b">WINNERS: <%= @campaign.number_of_winners %></div>
+          <div class="col-6 col-sm-2 col-md-3 h6 order-3 basic-b">WINNER(s): <%= @campaign.number_of_winners %></div>
         </div>
       <% end %>
       <hr />
       <div class="d-block text-center mb-5">
-        <!-- START OF VIRAL ACTIONS -->
         <div id="entry-actions">
           <div class="d-flex justify-content-center">
             <div class="w-100 px-0 px-sm-4">
@@ -82,7 +81,7 @@
                   <% if action.checked && action.name != "messenger" %>
                     <div>
                       <div class="promo-act-line">
-                        <a class="promo-act-btn promo-facebook <%= @contestant.share_action.pluck(:name).include?(action.name) ? "promo-check" : nil %>" href="<%= redirection_path(@contestant.secret_code, { event: action.name, action_url: action.action_url }) %>" title="" target="_blank">
+                        <a class="promo-act-btn promo-facebook <%= @contestant.share_action.pluck(:name).include?(action.name) ? "promo-check" : nil %>" href="<%= redirection_path(@contestant.secret_code, { event: action.name, action_url: action.action_url }) %>" target="_blank">
                           <div>Share via <%= action.name.humanize %></div>
                         </a>
                         <div class="tag-entries">
@@ -96,7 +95,7 @@
                 <% @campaign.bonus_entries.each do |bonus| %>
                   <div>
                     <div class="promo-act-line">
-                      <a class="promo-act-btn promo-facebook <%= @contestant.bonus_entry.pluck(:name).include?(bonus.name) ? "promo-check" : nil %>" href="<%= redirection_path(@contestant.secret_code, { event: bonus.name, action_url: bonus.action_url }) %>" title="" target="_blank">
+                      <a class="promo-act-btn promo-facebook <%= @contestant.bonus_entry.pluck(:name).include?(bonus.name) ? "promo-check" : nil %>" href="<%= redirection_path(@contestant.secret_code, { event: bonus.name, action_url: bonus.action_url }) %>" target="_blank">
                         <div><%= bonus.action_text %></div>
                       </a>
                       <div class="tag-entries">+<%= bonus.action_points %></div>
@@ -104,23 +103,43 @@
                   </div>
                 <% end %>
               </div>
+
               <br />
+
+              <% if @campaign.expired? %>
+                <div class="pt-5">
+                  <h2 class="text-center">
+                    <i>Oops, Giveaway Has Ended!</i>
+                  </h2>
+                </div>
+
+                <div class="hr-top mt-5"></div>
+
+                <div class="pt-3">
+                  <div class="mx-3 text-center">
+                    <small>PRIZES AWARDED: <span style="opacity: .5;">OCTOBER 17, 2021 12:00 AM</span></small>
+                  </div>
+                  <div class="mx-3 text-center">
+                    <small>GIVEAWAY ENDED: <span style="opacity: .5;">OCTOBER 16, 2021 12:00 AM</span></small>
+                  </div>
+                </div>
+              <% end %>
+
               <p class="divider-text">
-                <span class="bg-light"> OFFERED BY: </span>
+                <span class="bg-light">OFFERED BY:</span>
               </p>
               <div class="row mb-3" style="padding-top: 15px;">
                 <div class="d-flex flex-wrap justify-content-center">
-                  <div class="mx-3"><small title="America/New_York"><span class="h6">Giveaway Timezone: <%= @campaign.timezone || "UTC" %></span></small></div>
-                  <div class="mx-3"><small><span class="h6">Offered By: </span> <%= link_to @campaign.offered_by_name.upcase, @campaign.offered_by_url, target: "blank" %></small></div>
+                  <div class="mx-3"><small><span class="h6">TIME ZONE: <%= @campaign.time_zone.upcase %></span></small></div>
+                  <div class="mx-3"><small><span class="h6">OFFERED BY: <%= @campaign.offered_by_name.upcase %></span></small></div>
                 </div>
               </div>
               <p class="divider-text-footer">
-                <span class="bg-light">Enter sweepstakes and receive exclusive offers from <%= @campaign.offered_by_name %>. Unsubscribe anytime. <a href="#">Read official rules.</a></span>
+                <span class="bg-light">Enter sweepstakes and receive exclusive offers from <%= @campaign.offered_by_name %>. Unsubscribe anytime.<br /><a href="#">Read official rules.</a></span>
               </p>
             </div>
           </div>
         </div>
-        <!-- END OF VIRAL ACTIONS -->
       </div>
     </div>
   </div>
@@ -473,46 +492,53 @@ p {
 
 <script src="<%= root_url %>javascript/iframeResizer.contentWindow.min.js"></script>
 
-<% unless @contestant.confirmed_at.nil? %>
-<script type="text/javascript">
-  // Set the date we're counting down to
-  var countDownDate = new Date("<%= @campaign.ends_at %>").getTime();
-  
-  // Update the count down every 1 second
-  var x = setInterval(function() {
-  
-    // Get today's date and time
-    var now = new Date().getTime();
-  
-    // Find the distance between now and the count down date
-    var distance = countDownDate - now;
-  
-    // Time calculations for days, hours, minutes and seconds
-    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-  
-    document.getElementById("countdown-days").innerHTML = days
-    document.getElementById("countdown-hours").innerHTML = hours
-    document.getElementById("countdown-minutes").innerHTML = minutes
-    document.getElementById("countdown-seconds").innerHTML = seconds
-  
-    // Display the result in the element with id="demo"
-    // document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-    // + minutes + "m " + seconds + "s ";
-  
-    // If the count down is finished, write some text
-    if (distance < 0) {
-      clearInterval(x);
-      document.getElementById("demo").innerHTML = "EXPIRED";
-    }
-  }, 1000);
-</script>
-<% end %>
+<% if @contestant.confirmed_at.present? %>
+  <script type="text/javascript">
 
-<script type="text/javascript">
-  // $(".promo-act-btn").click(function() {
-  //   $(this).addClass("promo-check");
-  // })
-</script>
+    // Set the date we're counting down to
+    var countDownTime = new Date("<%= @campaign.ends_at %>").getTime();
+    
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+    
+      // Get today's date and time
+      var now = new Date().getTime();
+    
+      // Find the distance between now and the count down date
+      var distance = countDownTime - now;
+    
+      // Time calculations for days, hours, minutes and seconds
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("countdown-days").innerHTML = days
+      document.getElementById("countdown-hours").innerHTML = hours
+      document.getElementById("countdown-minutes").innerHTML = minutes
+      document.getElementById("countdown-seconds").innerHTML = seconds
+
+      // Display the result in the element with id="demo"
+      // document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+      // + minutes + "m " + seconds + "s ";
+
+      // If the count down is finished, write some text
+      if (distance < 0) {
+
+        clearInterval(x);
+
+        document.getElementById("countdown-days").innerHTML = "0"
+        document.getElementById("countdown-hours").innerHTML = "0"
+        document.getElementById("countdown-minutes").innerHTML = "0"
+        document.getElementById("countdown-seconds").innerHTML = "0"
+
+      }
+
+    }, 1000);
+
+    // $(".promo-act-btn").click(function() {
+    //   $(this).addClass("promo-check");
+    // })
+
+  </script>
+<% end %>

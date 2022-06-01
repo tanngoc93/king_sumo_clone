@@ -37,7 +37,7 @@ export default class extends Controller {
     const email = this.emailTarget.value
 
     if (!gdpr)
-      return alert("Please accept advertising terms!")
+      return alert("Please, accept advertising terms!")
 
     $.ajax({
       method: "POST",

@@ -3,11 +3,10 @@
 <% end %>
 
 <% content_for :facebook_properties do %>
-  <meta property="og:url"           content="<%= root_url.chomp("/") + contestant_register_path(@campaign) %>" />
-  <meta property="og:type"          content="website" />
-  <meta property="og:title"         content="<%= @campaign.title %>" />
-  <meta property="og:description"   content="<%= @campaign.description %>" />
-  <meta property="og:image"         content="" />
+  <meta property="og:url"         content="<%= root_url.chomp("/") + contestant_register_path(@campaign) %>" />
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="<%= @campaign.title %>" />
+  <meta property="og:description" content="<%= @campaign.description %>" />
 <% end %>
 
 <div class="page-width page-width--narrow card mx-auto" style="max-width: 72.5rem; margin: 25px 0; box-shadow: 0 10px 25px 0 rgb(99 123 173 / 20%); border-radius: 20px;">
@@ -15,8 +14,8 @@
     <div data-controller="carousel" data-bs-ride="carousel" id="giveawayCarousel" class="carousel slide" style="height: 350px">
       <div class="carousel-inner">
         <% @campaign.images.each_with_index do |image, index| %>
-          <div class="carousel-item <%= index === 0 ? "active" : "" %>">
-            <div class="d-block w-100" style="z-index: 99; height: 330px; border-radius: 20px 20px 0 0; background-image: url(<%= url_for(image.data) %>); background-repeat: no-repeat; background-position: bottom center; background-size: cover;">
+          <div class="carousel-item <%= index.eql?(0) ? "active" : nil %>">
+            <div class="d-block w-100" style="z-index: 99; height: 335px; border-radius: 20px 20px 0 0; background-image: url(<%= url_for(image.data) %>); background-repeat: no-repeat; background-position: center; background-size: cover;">
             </div>
           </div>
         <% end %>
@@ -32,13 +31,15 @@
     </div>
   <% end %>
   <div class="card-body" style="box-shadow: 0 10px 35px 0 rgb(99 123 173 / 20%); margin: <%= @campaign.images.any? ? "-45px 0 0 0" : "0" %>; padding: 35px 44px; border-radius: 20px; background-color: #FFF; z-index: 9999;">
-    <% unless @campaign.campaign_time_out? %>
-      <h1 class="card-title mb-4 text-center"><%= @campaign.title %></h1>
+    <h1 class="card-title mb-4 text-center">
+      <%= @campaign.title %>
+    </h1>
+    <% if @campaign.running? %>
       <div class="hr-title h6">
         <div>TIME LEFT</div>
       </div>
       <div class="d-flex text-center align-items-center basic-info">
-        <div class="col-6 col-sm-2 col-md-3 h6 order-2 order-sm-1 basic-b">Value: $<%= "%.2f" % @campaign.winner_prize_value.round(2) %></div>
+        <div class="col-6 col-sm-2 col-md-3 h6 order-2 order-sm-1 basic-b">VALUE: $<%= "%.2f" % @campaign.winner_prize_value.round(2) %></div>
         <div class="col-12 col-sm-7 col-md-6 order-1 order-sm-2 hr-b-small">
           <div class="time-left d-flex justify-content-center" id="countdown">
             <div class="time-unity">
@@ -58,15 +59,11 @@
             </div>
           </div>
         </div>
-        <div class="col-6 col-sm-2 col-md-3 h6 order-3 basic-b">Winner(s): <%= @campaign.number_of_winners %></div>
+        <div class="col-6 col-sm-2 col-md-3 h6 order-3 basic-b">WINNER(s): <%= @campaign.number_of_winners %></div>
       </div>
-    <% end %>  
-    <% if @campaign.campaign_time_out? %>
-      <h1 class="card-title mb-4 text-center" style="margin-top: 1.2rem;">Oops, The Giveaway Has Ended</h1>
-    <% else %>
       <div class="hr-arrow-down"></div>
       <div class="mb-3" style="margin-top: 1rem;">
-        <p class="text-center"><b>Enter with your email address or facebook:</b></p>
+        <p class="text-center"><b>Enter with your email address:</b></p>
       </div>
       <div class="register-form mx-auto" style="max-width: 440px; margin: 1rem 0;">
         <%= form_with(
@@ -96,23 +93,55 @@
               <div class="invalid-feedback">Your have entered an invalid e-mail address!</div>
             </div>
           </div>
-          <p class="text-muted mt-3" style="text-align: center;">
+          <p class="text-muted mt-2" style="text-align: center;">
             <label class="form-check-label">
-            <input class="form-check-input mr-2" data-contestants-target="gdpr" type="checkbox" required=""> <small>I consent to getting sale, promotion, or marketing email*</small>
+              <input class="form-check-input mr-2" data-contestants-target="gdpr" type="checkbox" required=""> <small><i>I consent to getting sale, promotion, or marketing email(*)</i></small>
             </label> 
           </p>
         <% end %>
       </div>
     <% end %>
+
     <div class="hr-top mt-5"></div>
-    <div class="pt-4 pb-5"><%= @campaign.description.html_safe %></div>
+
+    <% if @campaign.upcoming? %>
+      <div class="pt-4 pb-5">
+        <h2 class="text-center">
+          <i>This giveaway hasn't started yet!</i>
+        </h2>
+      </div>
+    <% end %>
+    
+    <% if @campaign.running? %>
+      <div class="pt-4 pb-5"><%= @campaign.description.html_safe %></div>
+    <% end %>
+
+    <% if @campaign.expired? %>
+      <div class="pt-5">
+        <h2 class="text-center">
+          <i>Oops, Giveaway Has Ended!</i>
+        </h2>
+      </div>
+
+      <div class="hr-top mt-5"></div>
+
+      <div class="pt-3">
+        <div class="mx-3 text-center">
+          <small>PRIZES AWARDED: <span style="opacity: .5;">OCTOBER 17, 2021 12:00 AM</span></small>
+        </div>
+        <div class="mx-3 text-center">
+          <small>GIVEAWAY ENDED: <span style="opacity: .5;">OCTOBER 16, 2021 12:00 AM</span></small>
+        </div>
+      </div>
+    <% end %>
+
     <p class="divider-text">
-      <span class="bg-light"> OFFERED BY: </span>
+      <span class="bg-light">OFFERED BY:</span>
     </p>
     <div class="row mb-3" style="padding-top: 15px;">
       <div class="d-flex flex-wrap justify-content-center">
-        <div class="mx-3"><small title="America/New_York"><span class="h6">Giveaway Timezone: <%= @campaign.timezone || "UTC" %></span></small></div>
-        <div class="mx-3"><small><span class="h6">Offered By: </span> <%= link_to @campaign.offered_by_name.upcase, @campaign.offered_by_url, target: "blank" %></small></div>
+        <div class="mx-3"><small><span class="h6">TIME ZONE: <%= @campaign.time_zone.upcase %></span></small></div>
+        <div class="mx-3"><small><span class="h6">OFFERED BY: <%= @campaign.offered_by_name.upcase %></span></small></div>
       </div>
     </div>
     <p class="divider-text-footer">
@@ -368,7 +397,7 @@
 <script type="text/javascript">
 
   // Set the date we're counting down to
-  var countDownDate = new Date("<%= @campaign.ends_at %>").getTime();
+  var countDownTime = new Date("<%= @campaign.ends_at %>").getTime();
   
   // Update the count down every 1 second
   var x = setInterval(function() {
@@ -377,7 +406,7 @@
     var now = new Date().getTime();
   
     // Find the distance between now and the count down date
-    var distance = countDownDate - now;
+    var distance = countDownTime - now;
   
     // Time calculations for days, hours, minutes and seconds
     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -390,15 +419,17 @@
     document.getElementById("countdown-minutes").innerHTML = minutes
     document.getElementById("countdown-seconds").innerHTML = seconds
 
-    // Display the result in the element with id="demo"
-    // document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-    // + minutes + "m " + seconds + "s ";
-
-    // If the count down is finished, write some text
     if (distance < 0) {
+
       clearInterval(x);
-      document.getElementById("demo").innerHTML = "EXPIRED";
+
+      document.getElementById("countdown-days").innerHTML = "0"
+      document.getElementById("countdown-hours").innerHTML = "0"
+      document.getElementById("countdown-minutes").innerHTML = "0"
+      document.getElementById("countdown-seconds").innerHTML = "0"
+
     }
+
   }, 1000);
 
 </script>

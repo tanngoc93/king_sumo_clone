@@ -3,10 +3,10 @@ class CreateCampaigns < ActiveRecord::Migration[6.1]
     create_table :campaigns do |t|
       t.string     :title
       t.text       :description
-      t.datetime   :starts_at
-      t.datetime   :ends_at
-      t.datetime   :awarded_at
-      t.string     :timezone
+      t.string     :starts_at
+      t.string     :ends_at
+      t.string     :awarded_at
+      t.string     :time_zone
       t.boolean    :gdpr
       t.string     :offered_by_name
       t.string     :offered_by_url

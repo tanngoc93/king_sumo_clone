@@ -13,7 +13,7 @@
         <th scope="col" class="text-center">Export CSV</th>
         <th scope="col" class="text-center">Promo</th>
         <th scope="col" class="text-center">View</th>
-        <th scope="col" class="text-center">#</th>
+        <th scope="col" class="text-center"></th>
       </tr>
     </thead>
     <tbody>
@@ -33,13 +33,7 @@
         </td>
         <td class="text-center"><%= campaign.total_entries %></td>
         <td class="text-center">
-          <% if campaign.status == "running" %>
-            <button disabled class="btn btn-success btn-sm"><%= campaign.status %></button>
-          <% elsif campaign.status == "stopped" %>
-            <button disabled class="btn btn-dark btn-sm"><%= campaign.status %></button>
-          <% else %>
-            <button disabled class="btn btn-dark btn-sm"><%= campaign.status %></button>
-          <% end %>
+          <h4 class="badge <%= status_badge(campaign) %>"><%= campaign.status %></h4>
         </td>
         <td class="text-center">
           <%= link_to campaign_path(campaign, format: :csv) do %>
