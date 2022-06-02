@@ -11,8 +11,9 @@
         <th scope="col" class="text-center">Referrals</th>
         <th scope="col" class="text-center">Registered IP</th>
         <th scope="col" class="text-center">Date Entered</th>
+        <th scope="col" class="text-center">Resend</th>
         <th scope="col" class="text-center">Confirmed</th>
-        <th scope="col" class="text-center">#</th>
+        <th scope="col" class="text-center"></th>
       </tr>
     </thead>
     <tbody>
@@ -26,8 +27,25 @@
           <td class="text-center"><%= contestant.registered_ip %></td>
           <td class="text-center"><%= contestant.created_at.strftime("%b %d, %Y %H:%m") %></td>
           <td class="text-center">
-            <% if contestant.confirmed %>
-              <span style="color: #198754;"><i class="fas fa-check-circle"></i></i></span>
+            <% unless contestant.confirmed? %>
+              <% if Time.now.before?(contestant.confirmation_sent_at + 24.hours) %>
+                <h4 class="badge alert-danger">wait for 24h</h4>
+              <% else %>
+                <%= link_to "Resend Confirmation?",
+                  contestant_resend_confirmation_path(contestant.secret_code),
+                  data: {
+                    remote: true,
+                    turbo_method: :post
+                  },
+                  disabled: contestant.confirmed? ? true : false,
+                  class: "small text-danger"
+                %>
+              <% end %>
+            <% end %>
+          </td>
+          <td class="text-center">
+            <% if contestant.confirmed? %>
+              <span style="color: #198754;"><i class="fas fa-check-circle"></i></span>
             <% else %>
               <span style="color: red;"><i class="far fa-times-circle"></i></span>
             <% end %>

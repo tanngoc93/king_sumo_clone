@@ -8,7 +8,7 @@ class User < ApplicationRecord
 
   has_many :campaigns, dependent: :destroy
 
-  enum user_type: %i[normal shopify]
+  enum user_type: %i[ normal shopify ]
 
   def send_devise_notification(notification, *args)
     devise_mailer.send(notification, self, *args).deliver_later

@@ -1,0 +1,2 @@
+module ResendConfirmationsHelper
+end

@@ -5,9 +5,9 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic"
 export default class extends Controller {
   connect() {
 
-    const tagId = document.querySelector( "#ckeditor" )
+    const element = document.querySelector( "#ckeditor" )
 
-    ClassicEditor.create( tagId, {
+    ClassicEditor.create( element, {
       language: {
         language: "en"
       },

@@ -72,8 +72,6 @@ class Campaign < ApplicationRecord
     self.ends_at    = ends_at.in_time_zone(time_zone)
     self.awarded_at = awarded_at.in_time_zone(time_zone)
 
-    return if self.archived?
-
     if now.before?( starts_at )
       self.status = 0
     end
