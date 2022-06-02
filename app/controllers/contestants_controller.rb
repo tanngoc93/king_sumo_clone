@@ -9,9 +9,7 @@ class ContestantsController < ApplicationController
   end
 
   def show
-    unless @contestant
-      redirect_to contestant_register_path(@campaign.slug)
-    end
+    redirect_to contestant_register_path(@campaign.slug) unless @contestant
   end
 
   def new
