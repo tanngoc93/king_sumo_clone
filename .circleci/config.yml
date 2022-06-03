@@ -8,25 +8,16 @@ defaults: &defaults
         DATABASE_PASSWORD: postgres
         DATABASE_DEVELOPMENT: data_development
         DATABASE_TEST: data_test
-    - image: cimg/redis:7.0.0
     - image: cimg/postgres:14.0
       environment:
         DATABASE_USER: postgres
         DATABASE_PASSWORD: postgres
-
-databases: &databases
-  docker:
     - image: cimg/redis:7.0.0
-    - image: cimg/postgres:14.0
-      environment:
-        DATABASE_USER: postgres
-        DATABASE_PASSWORD: postgres
 
 version: 2.0
 jobs:
   test:
     <<: *defaults
-    <<: *databases
     steps:
       - checkout
       - run:
@@ -79,11 +70,11 @@ jobs:
 
       - run:
           name: Build image
-          command: docker build --build-arg ARG_RAILS_MASTER_KEY=$ARG_RAILS_MASTER_KEY -t tanngoc93/king_sumo_clone:latest .
+          command: docker build --build-arg ARG_RAILS_MASTER_KEY=$ARG_RAILS_MASTER_KEY -t $DOCKER_REPO:latest .
 
       - run:
           name: Push image to Docker registry
-          command: docker push tanngoc93/king_sumo_clone:latest
+          command: docker push $DOCKER_REPO:latest
 
   deploy:
     machine:
@@ -96,7 +87,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh root@206.189.95.189 "cd wordpress-docker && docker-compose pull rails && docker-compose up -d"
+            ssh $SSH_USER@$SSH_HOST "cd wordpress-docker && docker-compose pull $DOCKER_SERVICE && docker-compose up -d"
 
 workflows:
   version: 2
