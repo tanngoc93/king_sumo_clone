@@ -6,6 +6,7 @@ defaults: &defaults
         DATABASE_HOST: localhost
         DATABASE_USER: postgres
         DATABASE_PASSWORD: postgres
+        DATABASE_DEVELOPMENT: data_development
         DATABASE_TEST: data_test
     - image: cimg/redis:7.0.0
     - image: cimg/postgres:14.0
@@ -19,10 +20,12 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - run: |
-        sudo apt install -y postgresql-client || true
-        curl -sL https://deb.nodesource.com/setup_16.x | bash - \
-          && sudo apt-get update && apt-get install -y nodejs
+      - run:
+          name: Install libvips42, graphviz, postgresql-client & nodejs 16.x
+          command: |
+            sudo sudo apt update && sudo apt install -y libvips42 graphviz postgresql-client || true
+            curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+            sudo apt install -y nodejs
 
       # Restore bundle cache
       - restore_cache:
@@ -43,16 +46,16 @@ jobs:
       - run:
           name: Database Setup
           command: |
-            RAILS_ENV=test bundle exec rake db:create
-            RAILS_ENV=test bundle exec rake db:structure:load
+            bundle exec rails db:create
+            bundle exec rails db:migrate
 
-      # - run:
-      #     name: Parallel RSpec
-      #     command: bin/rails test
+      - run:
+          name: Parallel RSpec
+          command: bundle exec rspec
 
       # Save artifacts
-      # - store_test_results:
-      #     path: /tmp/test-results
+      - store_test_results:
+          path: /tmp/rspec-results
 
   build:
     <<: *defaults
@@ -67,20 +70,39 @@ jobs:
 
       - run:
           name: Build image
-          command: docker build --build-arg ARG_RAILS_MASTER_KEY=$DOCKER_RAILS_MASTER_KEY -t tanngoc93/king_sumo_clone:latest .
+          command: docker build --build-arg ARG_RAILS_MASTER_KEY=$ARG_RAILS_MASTER_KEY -t tanngoc93/king_sumo_clone:latest .
 
       - run:
           name: Push image to Docker registry
           command: docker push tanngoc93/king_sumo_clone:latest
 
+  deploy:
+    machine:
+       enabled: true
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "ac:37:08:41:f7:3e:dd:30:ac:b0:69:9a:e1:4f:1d:28"
+
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh root@206.189.95.189 "cd wordpress-docker && docker-compose pull rails && docker-compose up -d"
+
 workflows:
   version: 2
   test-and-build:
     jobs:
-      - test
-      - build:
-          requires:
-            - test
+      # - test
+      # - build:
+      #     requires:
+      #       - test
+      #     filters:
+      #       branches:
+      #         only: main
+      - deploy:
+          # requires:
+          #   - build
           filters:
             branches:
               only: main
