@@ -14,10 +14,19 @@ defaults: &defaults
         DATABASE_USER: postgres
         DATABASE_PASSWORD: postgres
 
+databases: &databases
+  docker:
+    - image: cimg/redis:7.0.0
+    - image: cimg/postgres:14.0
+      environment:
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: postgres
+
 version: 2.0
 jobs:
   test:
     <<: *defaults
+    <<: *databases
     steps:
       - checkout
       - run:
@@ -91,18 +100,18 @@ jobs:
 
 workflows:
   version: 2
-  test-and-build:
+  test_build_deploy:
     jobs:
-      # - test
-      # - build:
-      #     requires:
-      #       - test
-      #     filters:
-      #       branches:
-      #         only: main
+      - test
+      - build:
+          requires:
+            - test
+          filters:
+            branches:
+              only: main
       - deploy:
-          # requires:
-          #   - build
+          requires:
+            - build
           filters:
             branches:
               only: main
