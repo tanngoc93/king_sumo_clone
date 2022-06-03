@@ -2,16 +2,16 @@ defaults: &defaults
   working_directory: ~/buildbox
   docker:
     - image: cimg/ruby:3.1.2
-        environment:
-          DATABASE_HOST: localhost
-          DATABASE_USER: postgres
-          DATABASE_PASSWORD: postgres
-          DATABASE_TEST: data_test
+      environment:
+        DATABASE_HOST: localhost
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: postgres
+        DATABASE_TEST: data_test
     - image: cimg/redis:7.0.0
     - image: cimg/postgres:14.0
-        environment:
-          DATABASE_USER: postgres
-          DATABASE_PASSWORD: postgres
+      environment:
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: postgres
 
 version: 2.0
 jobs:
@@ -19,7 +19,10 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - run: sudo apt install -y postgresql-client || true
+      - run: |
+        sudo apt install -y postgresql-client || true
+        curl -sL https://deb.nodesource.com/setup_16.x | bash - \
+          && sudo apt-get update && apt-get install -y nodejs
 
       # Restore bundle cache
       - restore_cache:
