@@ -1,0 +1,83 @@
+defaults: &defaults
+  working_directory: ~/buildbox
+  docker:
+    - image: cimg/ruby:3.1.2
+        environment:
+          DATABASE_HOST: localhost
+          DATABASE_USER: postgres
+          DATABASE_PASSWORD: postgres
+          DATABASE_TEST: data_test
+    - image: cimg/redis:7.0.0
+    - image: cimg/postgres:14.0
+        environment:
+          DATABASE_USER: postgres
+          DATABASE_PASSWORD: postgres
+
+version: 2.0
+jobs:
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: sudo apt install -y postgresql-client || true
+
+      # Restore bundle cache
+      - restore_cache:
+          keys:
+            - rails-cache-{{ checksum "Gemfile.lock" }}
+            - rails-cache-
+
+      - run:
+          name: Install dependencies
+          command: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
+
+      # Store bundle cache
+      - save_cache:
+          key: rails-cache-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          name: Database Setup
+          command: |
+            RAILS_ENV=test bundle exec rake db:create
+            RAILS_ENV=test bundle exec rake db:structure:load
+
+      # - run:
+      #     name: Parallel RSpec
+      #     command: bin/rails test
+
+      # Save artifacts
+      # - store_test_results:
+      #     path: /tmp/test-results
+
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.14
+
+      - run:
+          name: Login to Docker registry
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+      - run:
+          name: Build image
+          command: docker build --build-arg ARG_RAILS_MASTER_KEY=$DOCKER_RAILS_MASTER_KEY -t tanngoc93/king_sumo_clone:latest .
+
+      - run:
+          name: Push image to Docker registry
+          command: docker push tanngoc93/king_sumo_clone:latest
+
+workflows:
+  version: 2
+  test-and-build:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
+          filters:
+            branches:
+              only: main

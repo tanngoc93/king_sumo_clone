@@ -1,5 +1,9 @@
 # README
 
+## Code Status
+
+[![CircleCI](https://circleci.com/gh/tanngoc93/king_sumo_clone.svg?style=shield)](https://circleci.com/gh/tanngoc93/king_sumo_clone/tree/master) [![codecov](https://codecov.io/gh/tanngoc93/king_sumo_clone/branch/master/graph/badge.svg)](https://codecov.io/gh/tanngoc93/king_sumo_clone)
+
 #### This site is a copy from [KingSumo](https://kingsumo.com/)
 #### Beta version is deployed on Docker Swarm & using Traefik as a Proxy gateway, you can access [https://app.markiee.co/](https://app.markiee.co/)
 #### [ERD!](https://github.com/tanngoc93/king_sumo_clone/blob/main/erd.pdf)
