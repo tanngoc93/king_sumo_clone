@@ -16,8 +16,10 @@ class RedirectionsController < ApplicationController
       case params[:event]
       when "email"
         endpoint = "mailto:somebody@somewhere.com/?subject=#{ campaign.title }&body=#{ campaign.title } #Giveaway<br /><br />#{ campaign_url }<br /><br />Referral Code : #{ @contestant.referral_code }"
+      when "messenger"
+        endpoint = "https://messenger.com/"
       when "facebook"
-        endpoint = "https://www.facebook.com/" # sharer/sharer.php?u=#{ request.base_url + contestant_register_path(campaign, { ref: @contestant.referral_code }) }&title=#{ campaign.title }&description=#{ campaign.description }"
+        endpoint = "https://www.facebook.com/sharer/sharer.php?u=#{ campaign_url }&title=#{ campaign.title }&description=#{ campaign.description }"
       when "pinterest"
         endpoint = "http://pinterest.com/pin/create/button/?url=#{ campaign_url }&description=#{ campaign.title }"
       when "twitter"
