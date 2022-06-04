@@ -3,7 +3,7 @@ class DestroyOrphanImageJob
 
   sidekiq_options retry: false
 
-  def perform(id, *args)
+  def perform(id)
     image = Image.find_by(id: id)
     return if image.nil? || image.campaign_id.present?
     image.destroy

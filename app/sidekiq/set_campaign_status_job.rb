@@ -1,7 +1,7 @@
 class SetCampaignStatusJob
   include Sidekiq::Job
 
-  def perform(id, *args)
+  def perform(id)
 
     campaign = Campaign.find_by(id: id)
 
