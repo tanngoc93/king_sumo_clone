@@ -26,10 +26,9 @@ class Contestant < ApplicationRecord
     update(confirmed: true, confirmed_at: Time.now.utc, confirmed_ip: confirmed_ip)
   end
 
-  def resend_confirmation_email(now = Time.now)
-    if self.confirmed? || now.before?(self.confirmation_sent_at + 24.hours)
-      return false
-    end
+  def resend_confirmation_email?
+    return false if self.confirmed?
+    return false if Time.now.before?(self.confirmation_sent_at + 24.hours)
 
     send_confirmation_email
   end

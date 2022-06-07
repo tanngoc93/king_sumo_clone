@@ -3,7 +3,7 @@ class ResendConfirmationsController < ApplicationController
   before_action :set_contestant, only: %i[ create ]
 
   def create
-    if @contestant && @contestant.resend_confirmation_email
+    if @contestant && @contestant.resend_confirmation_email?
       redirect_to campaign_contestants_path(@contestant.campaign), notice: "Confirmation email has been resent!"
     else
       redirect_to campaigns_path, alert: "Something went wrong..."
