@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
-  before_action :authenticate_user!, :set_referral_cookie, :set_host
+  before_action :authenticate_user!, :set_referral_cookie
 
   protected
 
@@ -12,9 +12,5 @@ class ApplicationController < ActionController::Base
         expires: 30.days.from_now
       }
     end
-  end
-
-  def set_host
-    @host = params[:host]
   end
 end
