@@ -1,7 +1,8 @@
 class ImagesController < ApplicationController
+  skip_before_action :authenticate_user!, only: %i[ create destroy ]
 
   def create
-    image = Image.create!(image_params)
+    image = Image.create(image_params)
 
     render json: {
       image_preview: render_to_string(
